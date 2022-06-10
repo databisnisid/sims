@@ -22,19 +22,23 @@ def get_parameter_status():
 
         print(result)
         if loc.parameter_1:
-            print(result[loc.device.parameter_1.value])
+            print(loc.device.parameter_1.value, result[loc.device.parameter_1.value])
             loc.status_1 = result[loc.device.parameter_1.value]
+            print(loc.status_1)
 
         if loc.parameter_2:
-            print(result[loc.device.parameter_2.value])
+            print(loc.device.parameter_2.value, result[loc.device.parameter_2.value])
             loc.status_2 = result[loc.device.parameter_2.value]
+            print(loc.status_2)
 
         if loc.parameter_3:
-            print(result[loc.device.parameter_3.value])
+            print(loc.device.parameter_3.value, result[loc.device.parameter_3.value])
             loc.status_3 = result[loc.device.parameter_3.value]
+            print(loc.status_3)
 
         if loc.parameter_4:
-            print(result[loc.device.parameter_4.value])
+            print(loc.device.parameter_4.value, result[loc.device.parameter_4.value])
             loc.status_4 = result[loc.device.parameter_4.value]
+            print(loc.status_4)
 
         loc.save()
