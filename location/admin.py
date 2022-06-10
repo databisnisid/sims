@@ -35,8 +35,8 @@ class LocationForm(forms.ModelForm):
         print(self.cleaned_data['region'])
         user = get_current_user()
         superuser = User.objects.get(username=user)
-        print(user)
-        print(superuser.is_superuser)
+        #print(user)
+        #print(superuser.is_superuser)
         if superuser.is_superuser is not True:
             try:
                 account = Account.objects.get(user=user)

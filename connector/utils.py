@@ -44,7 +44,7 @@ def update_parameter_status():
         print(ping_result)
         loc.ping_status = ping_result
 
-        if loc.device is not None:
+        if loc.device is not None and ping_result is True:
             values = []
             values += [loc.device.parameter_1.value]
             values += [loc.device.parameter_2.value]
@@ -53,7 +53,6 @@ def update_parameter_status():
 
             result = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
 
-            #print(result)
             if loc.parameter_1:
                 print(loc.device.parameter_1.value, result[loc.device.parameter_1.value])
                 loc.status_1 = result[loc.device.parameter_1.value]

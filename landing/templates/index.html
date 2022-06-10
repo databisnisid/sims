@@ -86,7 +86,7 @@ function initMap() {
     },
     priority: {
       name: "PRIORITY",
-      icon: iconBase + "purple-dot.png",
+      icon: iconBase + "blue-dot.png",
     },
   };
 
@@ -104,6 +104,7 @@ function initMap() {
   //};
 
   var iconMarker = '';
+  var pingStatus = '';
 
   for (count = 0; count < locations.length; count++) {
     marker = new google.maps.Marker({
@@ -114,7 +115,15 @@ function initMap() {
 
     //summary_content[locations[count][3]].counter += 1;
 
-    iconMarker = icons['sdwan'].icon;
+    if (location[count][8] == 'True') {
+        iconMarker = icons['sdwan'].icon;
+        pingStatus = 'OK';
+
+    } else {
+        iconMarker = icons['nolive'].icon;
+        pingStatus = 'NOT OK';
+    }
+
     // If the Some Channel is problem
     if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
         || (locations[count][6] == '0' ) || (locations[count][7] == '0' )) {
@@ -135,6 +144,7 @@ function initMap() {
         '<div id="bodyContent">' +
         '<p>' +
         '<strong>IP:</strong> ' + locations[count][3] + '<br />' +
+        '<strong>Ping Status:</strong> ' + pingStatus + '<br />' +
         '<strong>Channel 1:</strong> ' + parameter_status[locations[count][4]] + '<br />' +
         '<strong>Channel 2:</strong> ' + parameter_status[locations[count][5]] + '<br />' +
         '<strong>Channel 3:</strong> ' + parameter_status[locations[count][6]] + '<br />' +
