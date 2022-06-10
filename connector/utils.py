@@ -21,3 +21,18 @@ def get_parameter_status():
         result = get(loc.ipaddress, values,hlapi.CommunityData(COMMUNITY))
 
         print(result)
+        if loc.parameter_1:
+            print(result[loc.device.parameter_1.value])
+            loc.status_1 = result[loc.device.parameter_1.value]
+
+        if loc.parameter_2:
+            print(result[loc.device.parameter_2.value])
+            loc.status_1 = result[loc.device.parameter_2.value]
+
+        if loc.parameter_3:
+            print(result[loc.device.parameter_3.value])
+            loc.status_1 = result[loc.device.parameter_3.value]
+
+        if loc.parameter_4:
+            print(result[loc.device.parameter_4.value])
+            loc.status_1 = result[loc.device.parameter_4.value]
