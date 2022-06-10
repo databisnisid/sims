@@ -64,7 +64,7 @@ function initMap() {
   var locations = [
   {% for lo in location %}
 ['{{lo.name}}',{{lo.geolocation}},'{{lo.ipaddress}}',
-'{{ lo.status_1 }}', '{{ lo.status_2 }}', '{{ lo.status_3 }}', '{{ lo.status_4 }}'],
+'{{ lo.status_1 }}', '{{ lo.status_2 }}', '{{ lo.status_3 }}', '{{ lo.status_4 }}', '{{ lo.ping_status }}'],
 {% endfor %}
 ];
 
