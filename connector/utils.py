@@ -36,3 +36,5 @@ def get_parameter_status():
         if loc.parameter_4:
             print(result[loc.device.parameter_4.value])
             loc.status_1 = result[loc.device.parameter_4.value]
+
+        loc.save()
