@@ -60,6 +60,12 @@ class Location(models.Model):
     def save(self):
         self.name = self.name.upper()
 
+        if self.device is None:
+            self.parameter_1 = False
+            self.parameter_2 = False
+            self.parameter_3 = False
+            self.parameter_4 = False
+
         if not self.parameter_1:
             self.status_1 = -1
 

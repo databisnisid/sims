@@ -1,6 +1,6 @@
 from .drivers.snmp import get
 from location.models import Location
-from .models import Device
+import pyping
 from pysnmp import hlapi
 
 COMMUNITY = 'public'
@@ -11,6 +11,13 @@ def update_parameter_status():
     location = Location.objects.filter().exclude(device=None)
 
     for loc in location:
+        # Ping First
+        import pyping
+        ping = pyping.ping(loc.ipaddress)
+
+        print(ping.ret_code)
+        loc.ping_status = ping.ret_code
+
         values = []
         values += [loc.device.parameter_1.value]
         values += [loc.device.parameter_2.value]
@@ -19,7 +26,7 @@ def update_parameter_status():
 
         result = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
 
-        print(result)
+        #print(result)
         if loc.parameter_1:
             print(loc.device.parameter_1.value, result[loc.device.parameter_1.value])
             loc.status_1 = result[loc.device.parameter_1.value]

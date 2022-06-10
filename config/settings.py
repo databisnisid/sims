@@ -150,7 +150,7 @@ DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
 
 # DJANGO-CRONTAB
-CRONJOBS = [
-    ('*/5 * * * *', 'connector.utils.update_parameter_status()'),
-]
+#CRONJOBS = [
+#    ('*/5 * * * *', 'connector.utils.update_parameter_status()'),
+#]
 
