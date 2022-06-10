@@ -1,0 +1,212 @@
+<html>
+<head>
+    <title>Map</title>
+    <style>
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  background-color: grey;
+}
+#legend {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid #000;
+}
+
+#legend h3 {
+  margin-top: 0;
+}
+
+#legend img {
+  vertical-align: middle;
+}
+
+#summary {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid #000;
+}
+
+#summary h3 {
+  margin-top: 0;
+}
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div id="title"><h1>SIMS</h1></div>
+<div id="legend"><h3>Legend</h3></div>
+<div id="summary"><h3>Summary</h3></div>
+
+
+<script type="text/javascript">
+function initMap() {
+  //var center = {lat: -1.233982000061532, lng: 116.83728437200422};
+  var center = { {{ settings.MAPS_CENTER }} };
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 5.5,
+    center: center
+  });
+  //var marker = new google.maps.Marker({
+  //  position: center,
+  //  map: map
+  //});
+
+  var locations = [
+  {% for lo in location %}
+['{{lo.name}}',{{lo.geolocation}},'{{lo.ipaddress}}',
+'{{ lo.status_1 }}', '{{ lo.status_2 }}', '{{ lo.status_3 }}', '{{ lo.status_4 }}'],
+{% endfor %}
+];
+
+  var infowindow =  new google.maps.InfoWindow({});
+  var marker, count;
+  const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
+  const icons = {
+    sdwan: {
+      name: "SDWAN",
+      icon: iconBase + "green-dot.png",
+    },
+    vpnip: {
+      name: "VPNIP",
+      icon: iconBase + "yellow-dot.png",
+    },
+    nolive: {
+      name: "NOLIVE",
+      icon: iconBase + "red-dot.png",
+    },
+    priority: {
+      name: "PRIORITY",
+      icon: iconBase + "purple-dot.png",
+    },
+  };
+
+
+  const parameter_status = {
+  "-1" : "DISABLE",
+  "0" : "PROBLEM",
+  "1" : "OK",
+  };
+
+  //const summary_content = {
+  //  {% for cs in cstatus %}
+  //      '{{ cs.name }}' : { counter: 0, },
+  //  {% endfor %}
+  //};
+
+  var iconMarker = '';
+
+  for (count = 0; count < locations.length; count++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[count][1], locations[count][2]),
+      map: map,
+      title: locations[count][0]
+    });
+
+    //summary_content[locations[count][3]].counter += 1;
+
+    // If the Some Channel is problem
+    if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
+        || (locations[count][6] == '0' ) || (locations[count][7] == '0' )) {
+
+            iconMarker = icons['nolive'].icon;
+        }
+
+    if ((locations[count][4] == '-1' ) && (locations[count][5] == '-1' )
+        && (locations[count][6] == '-1' ) && (locations[count][7] == '-1' )) {
+
+            iconMarker = icons['vpnip'].icon;
+        }
+
+    let contentString =
+        '<div id="content">' +
+        '<div id="siteNotice"></div>' +
+        '<h2 id="firstHeading" class="firstHeading">' + locations[count][0] + '</h2>' +
+        '<div id="bodyContent">' +
+        '<p>' +
+        '<strong>IP:</strong> ' + locations[count][3] + '<br />' +
+        '<strong>Channel 1:</strong> ' + parameter_status[locations[count][4]] + '<br />' +
+        '<strong>Channel 2:</strong> ' + parameter_status[locations[count][5]] + '<br />' +
+        '<strong>Channel 3:</strong> ' + parameter_status[locations[count][6]] + '<br />' +
+        '<strong>Channel 4:</strong> ' + parameter_status[locations[count][7]] + '<br />' +
+        '</p>' +
+        '</div>';
+
+
+    google.maps.event.addListener(marker, 'click', (function (marker, count) {
+      return function () {
+        //infowindow.setContent(locations[count][0]);
+        infowindow.setContent(contentString);
+        infowindow.open(map, marker);
+      }
+    })(marker, count));
+
+    marker.setIcon(iconMarker);
+/*
+    if (locations[count][3] == 'LIVE') {
+        if (locations[count][4] == 1) {
+            marker.setIcon(icons['sdwan'].icon);
+        } else {
+            marker.setIcon(icons['vpnip'].icon);
+        }
+    } else {
+      marker.setIcon(icons['nolive'].icon);
+    }
+
+    if (locations[count][9] == 'True') {
+        marker.setIcon(icons['priority'].icon);
+    }
+    */
+  }
+
+  const title = document.getElementById("title");
+  title.innerText = "SIMS";
+  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(title);
+
+  /*
+  const legend = document.getElementById("legend");
+
+
+  for (const key in icons) {
+    const type = icons[key];
+    const name = type.name;
+    const icon = type.icon;
+    const div = document.createElement("div");
+
+    div.innerHTML = '<img src="' + icon + '"> ' + name;
+    legend.appendChild(div);
+  }
+
+  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+
+  const summary = document.getElementById("summary");
+
+  for (const key in summary_content) {
+    const type = summary_content[key];
+    const counter = type.counter;
+    //const icon = type.icon;
+    const div = document.createElement("div");
+
+    div.innerHTML = '<h4>' + counter + ' => ' + key + '</h4>';
+    summary.appendChild(div);
+  }
+  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(summary);
+  */
+
+}
+
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ settings.GOOGLE_MAPS_API_KEY }}&callback=initMap">
+</script>
+</body>
+</html>
