@@ -60,24 +60,16 @@ class Location(models.Model):
     def save(self):
         self.name = self.name.upper()
 
-        if self.parameter_1:
-            self.status_1 = 1
-        else:
+        if not self.parameter_1:
             self.status_1 = -1
 
-        if self.parameter_2:
-            self.status_2 = 1
-        else:
+        if not self.parameter_2:
             self.status_2 = -1
 
-        if self.parameter_3:
-            self.status_3 = 1
-        else:
+        if not self.parameter_3:
             self.status_3 = -1
 
-        if self.parameter_4:
-            self.status_4 = 1
-        else:
+        if not self.parameter_4:
             self.status_4 = -1
 
         user = get_current_user()

@@ -18,7 +18,7 @@ def get_parameter_status():
         values += [loc.device.parameter_3.value]
         values += [loc.device.parameter_4.value]
 
-        result = get(loc.ipaddress, values,hlapi.CommunityData(COMMUNITY))
+        result = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
 
         print(result)
         if loc.parameter_1:
