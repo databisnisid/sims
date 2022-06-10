@@ -148,3 +148,9 @@ GRAPPELLI_ADMIN_TITLE = 'Surveillance Integration Monitoring System'
 # DBBACKUP
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
+
+# DJANGO-CRONTAB
+CRONJOBS = [
+    ('*/5 * * * *', 'connector.utils.update_parameter_status()'),
+]
+
