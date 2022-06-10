@@ -7,6 +7,7 @@ from django import forms
 from django.utils.translation import gettext as _
 from crum import get_current_user
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.contrib.auth.models import User
 
 
 class LocationForm(forms.ModelForm):
@@ -15,17 +16,38 @@ class LocationForm(forms.ModelForm):
         model = Location
         fields = '__all__'
 
-    def clean(self):
-        #po_number = self.cleaned_data['region']
-        #project = self.cleaned_data['project']
+    def __init__(self, *args, **kwargs):
+        super(LocationForm, self).__init__(*args, **kwargs)
         user = get_current_user()
-        #print(user)
-        try:
-            account = Account.objects.get(user=user)
-            #if account.region is None:
-            #    raise ValidationError(_('No Region is assigned to User. Please assign region to user in Account'))
-        except ObjectDoesNotExist:
-            raise ValidationError(_('No Region is assigned to User. Please assign region to user in Account'))
+        superuser = User.objects.get(username=user)
+        print(user)
+        print(superuser.is_superuser)
+        if superuser.is_superuser:
+            self.fields['region'].disabled = False
+        else:
+            self.fields['region'].disabled = True
+            self.fields['region'].required = False
+            #self.fields['region'].widget.attrs['readonly'] = 'readonly'
+
+    def clean(self):
+        #region = self.cleaned_data['region']
+        #project = self.cleaned_data['project']
+        print(self.cleaned_data['region'])
+        user = get_current_user()
+        superuser = User.objects.get(username=user)
+        print(user)
+        print(superuser.is_superuser)
+        if superuser.is_superuser is not True:
+            try:
+                account = Account.objects.get(user=user)
+                if account.region is None:
+                    raise ValidationError({'region': _('Please assign region to user')})
+                #    print(account.region)
+                #    self.cleaned_data['region'] = account.region
+                #    print(self.cleaned_data['region'])
+                #    raise ValidationError({'region': _('Please assign region')})
+            except ObjectDoesNotExist:
+                raise ValidationError(_('No Region is assigned to User. Please assign region to user in Account'))
 
 
 class LocationAdmin(admin.ModelAdmin):
@@ -65,22 +87,27 @@ class LocationAdmin(admin.ModelAdmin):
                     'ipaddress', 'device',
                     'parameter_1', 'parameter_2', 'parameter_3', 'parameter_4',
                     'region']
+
     exclude = ['created_at', 'updated_at']
-    readonly_fields = ['region']
+    #readonly_fields = ['region']
 
     class Meta:
         model = Location
 
     def get_queryset(self, request):
         user = get_current_user()
+        superuser = User.objects.get(username=user)
 
-        try:
-            account = Account.objects.get(user=user)
-            region = account.region
-        except ObjectDoesNotExist:
-            region = None
+        if superuser.is_superuser:
+            return Location.objects.all()
+        else:
+            try:
+                account = Account.objects.get(user=user)
+                region = account.region
+            except ObjectDoesNotExist:
+                region = None
 
-        return Location.objects.filter(region=region)
+            return Location.objects.filter(region=region)
 
 '''
 class StackedItemInline(admin.StackedInline):

@@ -62,7 +62,8 @@ class Location(models.Model):
         user = get_current_user()
         try:
             account = Account.objects.get(user=user)
-            self.region = account.region
+            if account.region is not None:
+                self.region = account.region
         except ObjectDoesNotExist:
             pass
 
