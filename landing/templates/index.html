@@ -91,8 +91,8 @@ h1 {
 </form>
 </div>
 <div id="sims" style="padding-left: 10px"><h1>&nbsp;&nbsp;Surveillance Integration Monitoring System&nbsp;&nbsp;</h1></div>
-<!--
 <div id="legend"><h3>Legend</h3></div>
+<!--
 <div id="summary"><h3>Summary</h3></div>
 -->
 
@@ -127,20 +127,16 @@ function initMap() {
   const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
   const icons = {
     sdwan: {
-      name: "SDWAN",
+      name: "Device OK (SNMP)",
       icon: iconBase + "green-dot.png",
     },
     vpnip: {
-      name: "VPNIP",
+      name: "Device OK (NO SNMP)",
       icon: iconBase + "yellow-dot.png",
     },
     nolive: {
-      name: "NOLIVE",
+      name: "Device PROBLEM",
       icon: iconBase + "red-dot.png",
-    },
-    priority: {
-      name: "PRIORITY",
-      icon: iconBase + "blue-dot.png",
     },
   };
 
@@ -211,7 +207,6 @@ function initMap() {
 
     google.maps.event.addListener(marker, 'click', (function (marker, count) {
       return function () {
-        //infowindow.setContent(locations[count][0]);
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
       }
@@ -236,15 +231,11 @@ function initMap() {
   }
 
   const form = document.getElementById("form");
-  //title.innerText = "SIMS";
   map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(form);
   const sims = document.getElementById("sims");
-  //title.innerText = "SIMS";
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(sims);
 
-  /*
   const legend = document.getElementById("legend");
-
 
   for (const key in icons) {
     const type = icons[key];
@@ -258,6 +249,7 @@ function initMap() {
 
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
 
+  /*
   const summary = document.getElementById("summary");
 
   for (const key in summary_content) {
