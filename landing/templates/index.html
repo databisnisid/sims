@@ -147,14 +147,15 @@ function initMap() {
   "1" : "OK",
   };
 
-  //const summary_content = {
-  //  {% for cs in cstatus %}
-  //      '{{ cs.name }}' : { counter: 0, },
-  //  {% endfor %}
-  //};
+  const summary_content = {
+    {% for cs in cstatus %}
+        '{{ cs.name }}' : { counter: 0, },
+    {% endfor %}
+  };
 
   var iconMarker = '';
   var pingStatus = '';
+  var deviceType = '';
 
   for (count = 0; count < locations.length; count++) {
     marker = new google.maps.Marker({
@@ -163,30 +164,35 @@ function initMap() {
       title: locations[count][0]
     });
 
-    //summary_content[locations[count][3]].counter += 1;
-
-    if (locations[count][8] == 'True') {
+    if (locations[count][8] == 'True')
+    {
         iconMarker = icons['sdwan'].icon;
         pingStatus = 'OK';
-
+        deviceType = 'sdwan';
     } else {
         iconMarker = icons['nolive'].icon;
         pingStatus = 'NOT OK';
+        deviceType = 'nolive';
     }
 
     // If the Some Channel is problem
     if (pingStatus == 'OK' ) {
-    if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
-        || (locations[count][6] == '0' ) || (locations[count][7] == '0' )) {
 
-            iconMarker = icons['nolive'].icon;
-        }
+        // If one of the channel is  0, then it is a problem
+        if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
+            || (locations[count][6] == '0' ) || (locations[count][7] == '0' ))
+            {
+                iconMarker = icons['nolive'].icon;
+                deviceType = 'nolive';
+            }
 
-    if ((locations[count][4] == '-1' ) && (locations[count][5] == '-1' )
-        && (locations[count][6] == '-1' ) && (locations[count][7] == '-1' )) {
-
-            iconMarker = icons['vpnip'].icon;
-        }
+        // If all channels are disable then, it is NO SNMP
+        if ((locations[count][4] == '-1' ) && (locations[count][5] == '-1' )
+            && (locations[count][6] == '-1' ) && (locations[count][7] == '-1' ))
+            {
+                iconMarker = icons['vpnip'].icon;
+                deviceType = 'vpnip';
+            }
     }
 
     let contentString =
@@ -206,35 +212,26 @@ function initMap() {
 
 
     google.maps.event.addListener(marker, 'click', (function (marker, count) {
-      return function () {
-        infowindow.setContent(contentString);
-        infowindow.open(map, marker);
-      }
+        return function () {
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+        }
     })(marker, count));
 
+    // Put the market
     marker.setIcon(iconMarker);
-/*
-    if (locations[count][3] == 'LIVE') {
-        if (locations[count][4] == 1) {
-            marker.setIcon(icons['sdwan'].icon);
-        } else {
-            marker.setIcon(icons['vpnip'].icon);
-        }
-    } else {
-      marker.setIcon(icons['nolive'].icon);
-    }
 
-    if (locations[count][9] == 'True') {
-        marker.setIcon(icons['priority'].icon);
-    }
-    */
-  }
+    // Summary count
+    summary_content[locations[count][3]].counter += 1;
 
+  } // EndFor
+
+  // Title
   const sims = document.getElementById("sims");
   map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(sims);
 
+  // Legend
   const legend = document.getElementById("legend");
-
   for (const key in icons) {
     const type = icons[key];
     const name = type.name;
@@ -244,15 +241,10 @@ function initMap() {
     div.innerHTML = '<img src="' + icon + '"> ' + name;
     legend.appendChild(div);
   }
-
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
 
-  const form = document.getElementById("form");
-  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(form);
-
-  /*
+  // Summary
   const summary = document.getElementById("summary");
-
   for (const key in summary_content) {
     const type = summary_content[key];
     const counter = type.counter;
@@ -263,7 +255,11 @@ function initMap() {
     summary.appendChild(div);
   }
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(summary);
-  */
+
+  // Form Select
+  const form = document.getElementById("form");
+  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(form);
+
 
 }
 
