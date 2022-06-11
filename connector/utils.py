@@ -46,31 +46,36 @@ def update_parameter_status():
 
         if loc.device is not None and ping_result is True:
             values = []
-            values += [loc.device.parameter_1.value]
-            values += [loc.device.parameter_2.value]
-            values += [loc.device.parameter_3.value]
-            values += [loc.device.parameter_4.value]
+            if loc.device.parameter_1.value is not None:
+                values += [loc.device.parameter_1.value]
+            if loc.device.parameter_2.value is not None:
+                values += [loc.device.parameter_2.value]
+            if loc.device.parameter_3.value is not None:
+                values += [loc.device.parameter_3.value]
+            if loc.device.parameter_4.value is not None:
+                values += [loc.device.parameter_4.value]
 
-            result = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
+            if values is not None:
+                result = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
 
-            if loc.parameter_1:
-                print(loc.device.parameter_1.value, result[loc.device.parameter_1.value])
-                loc.status_1 = result[loc.device.parameter_1.value]
-                print(loc.status_1)
+                if loc.parameter_1:
+                    print(loc.device.parameter_1.value, result[loc.device.parameter_1.value])
+                    loc.status_1 = result[loc.device.parameter_1.value]
+                    print(loc.status_1)
 
-            if loc.parameter_2:
-                print(loc.device.parameter_2.value, result[loc.device.parameter_2.value])
-                loc.status_2 = result[loc.device.parameter_2.value]
-                print(loc.status_2)
+                if loc.parameter_2:
+                    print(loc.device.parameter_2.value, result[loc.device.parameter_2.value])
+                    loc.status_2 = result[loc.device.parameter_2.value]
+                    print(loc.status_2)
 
-            if loc.parameter_3:
-                print(loc.device.parameter_3.value, result[loc.device.parameter_3.value])
-                loc.status_3 = result[loc.device.parameter_3.value]
-                print(loc.status_3)
+                if loc.parameter_3:
+                    print(loc.device.parameter_3.value, result[loc.device.parameter_3.value])
+                    loc.status_3 = result[loc.device.parameter_3.value]
+                    print(loc.status_3)
 
-            if loc.parameter_4:
-                print(loc.device.parameter_4.value, result[loc.device.parameter_4.value])
-                loc.status_4 = result[loc.device.parameter_4.value]
-                print(loc.status_4)
+                if loc.parameter_4:
+                    print(loc.device.parameter_4.value, result[loc.device.parameter_4.value])
+                    loc.status_4 = result[loc.device.parameter_4.value]
+                    print(loc.status_4)
 
-        loc.save()
+                loc.save()
