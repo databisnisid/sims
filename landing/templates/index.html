@@ -102,7 +102,7 @@ function initMap() {
   //var center = {lat: -1.233982000061532, lng: 116.83728437200422};
   var center = { {{ settings.MAPS_CENTER }} };
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 5.5,
+    zoom: {{ settings.MAPS_ZOOM }},
     center: center
   });
   //var marker = new google.maps.Marker({
@@ -179,6 +179,7 @@ function initMap() {
     }
 
     // If the Some Channel is problem
+    if (pingStatus == 'OK' ) {
     if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
         || (locations[count][6] == '0' ) || (locations[count][7] == '0' )) {
 
@@ -190,6 +191,7 @@ function initMap() {
 
             iconMarker = icons['vpnip'].icon;
         }
+    }
 
     let contentString =
         '<div id="content">' +
