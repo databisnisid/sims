@@ -3,7 +3,7 @@ from django.urls import path, include
 from landing.views import index
 from django.utils.translation import gettext as _
 
-admin.site.site_header = _('Surveillance Configuration')
+admin.site.site_header = _('Surveillance Integration Monitoring System')
 
 urlpatterns = [
     path('', index, name='index'),
