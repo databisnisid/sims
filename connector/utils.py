@@ -51,7 +51,7 @@ def update_parameter_status():
 
             # Get Product Type if Device Type contains OID
             if SNMP_OID in loc.device.type:
-                device = Device.objects.get(id=loc.device)
+                device = Device.objects.get(id=loc.device.id)
                 result = get(loc.ipaddress, device.type, hlapi.CommunityData(COMMUNITY))
                 device.type = result[device.type]
                 device.save()
