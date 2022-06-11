@@ -127,14 +127,17 @@ function initMap() {
     sdwan: {
       name: "Device OK (SNMP)",
       icon: iconBase + "green-dot.png",
+      counter: 0,
     },
     vpnip: {
       name: "Device OK (NO SNMP)",
       icon: iconBase + "yellow-dot.png",
+      counter: 0,
     },
     nolive: {
       name: "Device PROBLEM",
       icon: iconBase + "red-dot.png",
+      counter: 0,
     },
   };
 
@@ -230,7 +233,7 @@ function initMap() {
     marker.setIcon(iconMarker);
 
     // Summary count
-    summary_content[deviceType].counter += 1;
+    icons[deviceType].counter += 1;
 
   } // EndFor
 
@@ -244,14 +247,16 @@ function initMap() {
     const type = icons[key];
     const name = type.name;
     const icon = type.icon;
+    const counter = type.counter;
     const div = document.createElement("div");
 
-    div.innerHTML = '<img src="' + icon + '"> ' + name;
+    div.innerHTML = '<img src="' + icon + '"> ' + name + ' => ' + counter;
     legend.appendChild(div);
   }
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
 
   // Summary
+  /*
   const summary = document.getElementById("summary");
   for (const key in summary_content) {
     const type = summary_content[key];
@@ -263,6 +268,7 @@ function initMap() {
     summary.appendChild(div);
   }
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(summary);
+  */
 
   // Form Select
   const form = document.getElementById("form");
