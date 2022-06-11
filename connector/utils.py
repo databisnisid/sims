@@ -54,7 +54,9 @@ def update_parameter_status():
                 device = Device.objects.get(id=loc.device.id)
                 print(device)
                 print(loc.ipaddress)
+                print(device.type)
                 result = get(loc.ipaddress, device.type, hlapi.CommunityData(COMMUNITY))
+                print(result)
                 device.type = result[device.type]
                 device.save()
 
