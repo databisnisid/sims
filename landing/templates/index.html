@@ -162,6 +162,7 @@ function initMap() {
       title: locations[count][0]
     });
 
+/*
     if (locations[count][8] == 'True')
     {
         iconMarker = icons['sdwan'].icon;
@@ -172,9 +173,14 @@ function initMap() {
         pingStatus = 'NOT OK';
         deviceType = 'nolive';
     }
+*/
 
     // If the Some Channel is problem
-    if (pingStatus == 'OK' ) {
+    if (locations[count][8] == 'True')
+    {
+        iconMarker = icons['sdwan'].icon;
+        pingStatus = 'OK';
+        deviceType = 'sdwan';
 
         // If one of the channel is  0, then it is a problem
         if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
@@ -191,6 +197,10 @@ function initMap() {
                 iconMarker = icons['vpnip'].icon;
                 deviceType = 'vpnip';
             }
+    } else {
+        iconMarker = icons['nolive'].icon;
+        pingStatus = 'NOT OK';
+        deviceType = 'nolive';
     }
 
     let contentString =
