@@ -146,9 +146,9 @@ function initMap() {
   };
 
   const summary_content = {
-        'sdwan': { counter: 0 },
-        'vpnip': { counter: 0 },
-        'nolive': { counter: 0 },
+        'sdwan': { title: 'Device OK (SNMP)', counter: 0 },
+        'vpnip': { title: 'Device OK (NO SNMP), counter: 0 },
+        'nolive': { title: 'Device PROBLEM', counter: 0 },
 
   };
 
@@ -257,10 +257,10 @@ function initMap() {
   for (const key in summary_content) {
     const type = summary_content[key];
     const counter = type.counter;
-    //const icon = type.icon;
+    const title = type.title;
     const div = document.createElement("div");
 
-    div.innerHTML = '<h4>' + counter + ' => ' + key + '</h4>';
+    div.innerHTML = '<h4>' + title + ' => ' + counter + '</h4>';
     summary.appendChild(div);
   }
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(summary);
