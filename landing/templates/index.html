@@ -1,11 +1,22 @@
 <html>
 <head>
     <title>SIMS</title>
+    <meta http-equiv="refresh" content="600" />
+    <!--
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+-->
     <style>
 body {
   margin: 0px;
   padding: 0px;
 }
+
+h1 {
+  display: inline-block;
+  background-color: white;
+  border: 2px solid black;
+}
+
 
 #map {
   height: 100%;
@@ -40,12 +51,49 @@ body {
   margin-top: 0;
 }
     </style>
+    <script>
+    /*
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 5000);
+    */
+        function updateMap(value) {
+            location.href = '/?q=' + value;
+            console.log(value);
+        }
+    </script>
 </head>
 <body>
 <div id="map"></div>
-<div id="title"><h1>SIMS</h1></div>
+<div id="form">
+<form style="padding-right: 10px;">
+    <select name="mapchange" onchange="updateMap(this.options[this.selectedIndex].value)">
+
+        {% if specific_region %}
+            <option value="ALL">ALL REGION</option>
+        {% else %}
+            <option value="ALL" selected>ALL REGION</option>
+        {% endif %}
+
+        {% for reg in region %}
+            {% if specific_region %}
+                {% if specific_region.code == reg.code %}
+                    <option value="{{ reg.code }}" selected>{{ reg.name }}</option>
+                {% else %}
+                    <option value="{{ reg.code }}">{{ reg.name }}</option>
+                {% endif %}
+            {% else %}
+                <option value="{{ reg.code }}">{{ reg.name }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</form>
+</div>
+<div id="sims" style="padding-left: 10px"><h1>&nbsp;&nbsp;Surveillance Integration Monitoring System&nbsp;&nbsp;</h1></div>
+<!--
 <div id="legend"><h3>Legend</h3></div>
 <div id="summary"><h3>Summary</h3></div>
+-->
 
 
 <script type="text/javascript">
@@ -60,6 +108,11 @@ function initMap() {
   //  position: center,
   //  map: map
   //});
+
+{% if specific_region %}
+  map.setCenter(new google.maps.LatLng({{ specific_region.map_center }}));
+  map.setZoom({{ specific_region.map_zoom }});
+{% endif %}
 
   var locations = [
   {% for lo in location %}
@@ -179,9 +232,12 @@ function initMap() {
     */
   }
 
-  const title = document.getElementById("title");
-  title.innerText = "SIMS";
-  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(title);
+  const form = document.getElementById("form");
+  //title.innerText = "SIMS";
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(form);
+  const sims = document.getElementById("sims");
+  //title.innerText = "SIMS";
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(sims);
 
   /*
   const legend = document.getElementById("legend");
@@ -216,8 +272,11 @@ function initMap() {
 }
 
 </script>
+
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key={{ settings.GOOGLE_MAPS_API_KEY }}&callback=initMap">
 </script>
+
+
 </body>
 </html>

@@ -10,7 +10,7 @@ class AccountAdmin(admin.ModelAdmin):
 
 
 class RegionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'code']
+    list_display = ['name', 'code', 'map_center', 'map_zoom']
 
     class Meta:
         model = Region

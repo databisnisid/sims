@@ -6,6 +6,9 @@ from django.utils.translation import gettext as _
 class Region(models.Model):
     name = models.CharField(_('Region Name'), max_length=50)
     code = models.CharField(_('Region Code'), max_length=20, unique=True)
+    map_center = models.CharField(_('Map Center'), max_length=100,
+                                  default='-1.233982000061532, 116.83728437200422')
+    map_zoom = models.IntegerField(_('Map Zoom'), default=9)
 
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
