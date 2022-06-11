@@ -146,9 +146,10 @@ function initMap() {
   };
 
   const summary_content = {
-    {% for cs in cstatus %}
-        '{{ cs.name }}' : { counter: 0, },
-    {% endfor %}
+        'sdwan': { counter: 0 },
+        'vpnip': { counter: 0 },
+        'nolive': { counter: 0 },
+
   };
 
   var iconMarker = '';
