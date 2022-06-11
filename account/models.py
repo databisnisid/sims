@@ -8,7 +8,7 @@ class Region(models.Model):
     code = models.CharField(_('Region Code'), max_length=20, unique=True)
     map_center = models.CharField(_('Map Center'), max_length=100,
                                   default='-1.233982000061532, 116.83728437200422')
-    map_zoom = models.IntegerField(_('Map Zoom'), default=9)
+    map_zoom = models.FloatField(_('Map Zoom'), default=9)
 
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
