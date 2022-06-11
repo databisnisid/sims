@@ -1,17 +1,18 @@
 from .drivers.snmp import get
 from location.models import Location
+from connector.models import Device
 from pysnmp import hlapi
 import platform
 import subprocess
 
 
 def ping(host_or_ip, packets=1, timeout=1000):
-    ''' Calls system "ping" command, returns True if ping succeeds.
+    """ Calls system "ping" command, returns True if ping succeeds.
     Required parameter: host_or_ip (str, address of host to ping)
     Optional parameters: packets (int, number of retries), timeout (int, ms to wait for response)
     Does not show any output, either as popup window or in command line.
     Python 3.5+, Windows and Linux compatible
-    '''
+    """
     # The ping command is the same for Windows and Linux, except for the "number of packets" flag.
     if platform.system().lower() == 'windows':
         command = ['ping', '-n', str(packets), '-w', str(timeout), host_or_ip]
@@ -31,9 +32,11 @@ def ping(host_or_ip, packets=1, timeout=1000):
 
 
 COMMUNITY = 'public'
+SNMP_OID = '1.3.6.1.4.1'
 
 
 def update_parameter_status():
+    """ Update all parameter status in location model using connector.utils """
 
     location = Location.objects.all()
 
@@ -45,6 +48,14 @@ def update_parameter_status():
         loc.ping_status = ping_result
 
         if loc.device is not None and ping_result is True:
+
+            # Get Product Type if Device Type contains OID
+            if SNMP_OID in loc.device.type:
+                device = Device.objects.get(id=loc.device)
+                result = get(loc.ipaddress, device.type, hlapi.CommunityData(COMMUNITY))
+                device.type = result[device.type]
+                device.save()
+
             values = []
             if loc.device.parameter_1.value is not None:
                 values += [loc.device.parameter_1.value]
