@@ -56,6 +56,8 @@ def update_parameter_status():
                 except RuntimeError:
                     result = None
 
+                print('Up to Here')
+
                 if result is None:
                     loc.device = None
                 else:
