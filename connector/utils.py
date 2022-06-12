@@ -48,24 +48,24 @@ def update_parameter_status():
         loc.ping_status = ping_result
 
         if loc.device is not None and ping_result is True:
-            print(loc.device.parameter_type)
-            print(loc.device_type)
+            #print(loc.device.parameter_type)
+            #print(loc.device_type)
 
             # Get Product Type if Device Type is Blank
-            # if loc.device.parameter_type is not None and loc.device_type is None:
-            if loc.device.parameter_type is not None:
-                print('AKSDHKAJSDH', loc.device.parameter_type)
+            if loc.device.parameter_type is not None and loc.device_type.strip():
+            #if loc.device.parameter_type is not None:
+
                 try:
                     result = get(loc.ipaddress, [loc.device.parameter_type.value], hlapi.CommunityData(COMMUNITY))
                 except RuntimeError:
                     result = None
 
-                print('Up to Here')
-
                 if result is None:
+                    print('Remove Device', loc.device, 'from', loc.name)
                     loc.device = None
                 else:
                     loc.device_type = result[loc.device.parameter_type.value]
+                    print('Get Result', loc.device_type, 'for', loc.name)
 
                 loc.save()
 
@@ -90,6 +90,7 @@ def update_parameter_status():
                 values += [loc.device.parameter_4.value]
 
             if values is not None:
+
                 try:
                     result_parameter = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
                 except RuntimeError:
