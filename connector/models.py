@@ -85,5 +85,4 @@ class Device(models.Model):
 
     def save(self):
         self.name = self.name.upper()
-        self.type = self.type.upper()
         return super(Device, self).save()
