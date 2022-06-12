@@ -56,7 +56,7 @@ def update_parameter_status():
             if loc.device.parameter_type is not None:
                 print('AKSDHKAJSDH', loc.device.parameter_type)
                 try:
-                    result = get(loc.ipaddress, [loc.device.parameter_type], hlapi.CommunityData(COMMUNITY))
+                    result = get(loc.ipaddress, [loc.device.parameter_type.value], hlapi.CommunityData(COMMUNITY))
                 except RuntimeError:
                     result = None
 
@@ -65,7 +65,7 @@ def update_parameter_status():
                 if result is None:
                     loc.device = None
                 else:
-                    loc.device_type = result[loc.device.parameter_type]
+                    loc.device_type = result[loc.device.parameter_type.value]
 
                 loc.save()
 
