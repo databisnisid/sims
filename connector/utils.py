@@ -51,7 +51,10 @@ def update_parameter_status():
 
             # Get Product Type if Device Type is Blank
             if loc.device.parameter_type is not None and loc.device_type is None:
-                result = get(loc.ipaddress, [loc.device.parameter_type], hlapi.CommunityData(COMMUNITY))
+                try:
+                    result = get(loc.ipaddress, [loc.device.parameter_type], hlapi.CommunityData(COMMUNITY))
+                except RuntimeError:
+                    result = None
 
                 if result is None:
                     loc.device = None
@@ -81,7 +84,10 @@ def update_parameter_status():
                 values += [loc.device.parameter_4.value]
 
             if values is not None:
-                result_parameter = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
+                try:
+                    result_parameter = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
+                except RuntimeError:
+                    result_parameter = None
 
                 if result_parameter:
                     if loc.parameter_1:
