@@ -52,7 +52,7 @@ def update_parameter_status():
             #print(loc.device_type)
 
             # Get Product Type if Device Type is Blank
-            if loc.device.parameter_type is not None and loc.device_type.strip():
+            if loc.device.parameter_type is not None and not loc.device_type.strip():
             #if loc.device.parameter_type is not None:
 
                 try:
