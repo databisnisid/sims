@@ -30,7 +30,15 @@ class Parameter(models.Model):
 
 class Device(models.Model):
     name = models.CharField(max_length=30, verbose_name=_('Device Brand'))
-    type = models.CharField(max_length=30, unique=True, verbose_name=_('Device Type'))
+    # type = models.CharField(max_length=30, unique=True, verbose_name=_('Device Type'))
+    parameter_type = models.ForeignKey(
+        Parameter,
+        on_delete=models.RESTRICT,
+        related_name='parameter_type',
+        verbose_name=_('Parameter Device Type'),
+        null=True,
+        blank=True
+    )
     parameter_1 = models.ForeignKey(
         Parameter,
         on_delete=models.RESTRICT,
@@ -73,7 +81,7 @@ class Device(models.Model):
         verbose_name_plural = _('device List')
 
     def __str__(self):
-        return '%s %s' % (self.name, self.type)
+        return '%s' % self.name
 
     def save(self):
         self.name = self.name.upper()

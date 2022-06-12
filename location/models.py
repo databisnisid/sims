@@ -45,6 +45,7 @@ class Location(models.Model):
     status_4 = models.IntegerField(default=-1, verbose_name=_('Status 4'))
 
     ping_status = models.BooleanField(default=True, verbose_name=_('Ping Status'))
+    device_type = models.CharField(max_length=30, blank=True, verbose_name=_('Device Type'))
 
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)

@@ -84,12 +84,12 @@ class LocationAdmin(admin.ModelAdmin):
     )
 
     list_display = ['name', 'address', 'geolocation',
-                    'ipaddress', 'device',
+                    'ipaddress', 'device', 'device_type',
                     'parameter_1', 'parameter_2', 'parameter_3', 'parameter_4',
                     'region']
 
     exclude = ['created_at', 'updated_at']
-    #readonly_fields = ['region']
+    readonly_fields = ['device_type']
 
     class Meta:
         model = Location

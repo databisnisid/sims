@@ -32,7 +32,7 @@ def ping(host_or_ip, packets=1, timeout=1000):
 
 
 COMMUNITY = 'public'
-SNMP_OID = '1.3.6.1.4.1'
+# SNMP_OID = '1.3.6.1.4.1'
 
 
 def update_parameter_status():
@@ -44,22 +44,32 @@ def update_parameter_status():
         # Ping First
         ping_result = ping(loc.ipaddress)
 
-        print(ping_result)
+        # print(ping_result)
         loc.ping_status = ping_result
 
         if loc.device is not None and ping_result is True:
 
+            # Get Product Type if Device Type is Blank
+            if loc.device.parameter_type is not None and loc.devie_type is None:
+                result = get(loc.ipaddress, [loc.device.parameter_type], hlapi.CommunityData(COMMUNITY))
+
+                if result is None:
+                    loc.device = None
+                else:
+                    loc.device_type = result[loc.device.parameter_type]
+
+                loc.save()
+
             # Get Product Type if Device Type contains OID
+            """
             if SNMP_OID in loc.device.type:
                 device = Device.objects.get(id=loc.device.id)
-                print(device)
-                print(loc.ipaddress)
-                print(device.type)
                 result = get(loc.ipaddress, [device.type], hlapi.CommunityData(COMMUNITY))
-                print(result)
                 device.type = result[device.type]
                 device.save()
+            """
 
+        if loc.device is not None and ping_result is True:
             values = []
             if loc.device.parameter_1.value is not None:
                 values += [loc.device.parameter_1.value]
@@ -71,26 +81,27 @@ def update_parameter_status():
                 values += [loc.device.parameter_4.value]
 
             if values is not None:
-                result = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
+                result_parameter = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
 
-                if loc.parameter_1:
-                    print(loc.device.parameter_1.value, result[loc.device.parameter_1.value])
-                    loc.status_1 = result[loc.device.parameter_1.value]
-                    print(loc.status_1)
+                if result_parameter:
+                    if loc.parameter_1:
+                        print(loc.device.parameter_1.value, result[loc.device.parameter_1.value])
+                        loc.status_1 = result_parameter[loc.device.parameter_1.value]
+                        print(loc.status_1)
 
-                if loc.parameter_2:
-                    print(loc.device.parameter_2.value, result[loc.device.parameter_2.value])
-                    loc.status_2 = result[loc.device.parameter_2.value]
-                    print(loc.status_2)
+                    if loc.parameter_2:
+                        print(loc.device.parameter_2.value, result[loc.device.parameter_2.value])
+                        loc.status_2 = result_parameter[loc.device.parameter_2.value]
+                        print(loc.status_2)
 
-                if loc.parameter_3:
-                    print(loc.device.parameter_3.value, result[loc.device.parameter_3.value])
-                    loc.status_3 = result[loc.device.parameter_3.value]
-                    print(loc.status_3)
+                    if loc.parameter_3:
+                        print(loc.device.parameter_3.value, result[loc.device.parameter_3.value])
+                        loc.status_3 = result_parameter[loc.device.parameter_3.value]
+                        print(loc.status_3)
 
-                if loc.parameter_4:
-                    print(loc.device.parameter_4.value, result[loc.device.parameter_4.value])
-                    loc.status_4 = result[loc.device.parameter_4.value]
-                    print(loc.status_4)
+                    if loc.parameter_4:
+                        print(loc.device.parameter_4.value, result[loc.device.parameter_4.value])
+                        loc.status_4 = result_parameter[loc.device.parameter_4.value]
+                        print(loc.status_4)
 
-                loc.save()
+                    loc.save()
