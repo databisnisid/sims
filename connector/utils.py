@@ -50,7 +50,7 @@ def update_parameter_status():
         if loc.device is not None and ping_result is True:
 
             # Get Product Type if Device Type is Blank
-            if loc.device.parameter_type is not None and loc.devie_type is None:
+            if loc.device.parameter_type is not None and loc.device_type is None:
                 result = get(loc.ipaddress, [loc.device.parameter_type], hlapi.CommunityData(COMMUNITY))
 
                 if result is None:
