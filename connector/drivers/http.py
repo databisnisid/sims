@@ -2,6 +2,7 @@ import pycurl
 import certifi
 from io import BytesIO
 import cv2
+import numpy as np
 
 
 def get(url):
@@ -20,7 +21,8 @@ def get(url):
 
     ''' Detect Image Black '''
     if result:
-        image = cv2.imread(buffer.getbuffer(), 0)
+        file_bytes = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
+        image = cv2.imread(file_bytes, 0)
         gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         if cv2.countNonZero(gray_version) == 0:
             print("Error")
