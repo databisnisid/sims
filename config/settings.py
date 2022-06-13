@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str(os.getenv('DEBUG'))
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = [str(os.getenv('ALLOWED_HOSTS'))]
 
@@ -135,7 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Only Django 4.0
-CSRF_TRUSTED_ORIGINS = ['https://*.backone.cloud', 'https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://*.backone.cloud', 'http://127.0.0.1:8000', 'http://localhost:8000/']
 
 # MAP
 GOOGLE_MAPS_API_KEY = str(os.getenv(('GOOGLE_MAPS_API_KEY')))
@@ -155,4 +155,3 @@ DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
 #CRONJOBS = [
 #    ('*/5 * * * *', 'connector.utils.update_parameter_status()'),
 #]
-

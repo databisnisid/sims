@@ -97,16 +97,11 @@ h1 {
 
 <script type="text/javascript">
 function initMap() {
-  //var center = {lat: -1.233982000061532, lng: 116.83728437200422};
   var center = { {{ settings.MAPS_CENTER }} };
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: {{ settings.MAPS_ZOOM }},
     center: center
   });
-  //var marker = new google.maps.Marker({
-  //  position: center,
-  //  map: map
-  //});
 
 {% if specific_region %}
   map.setCenter(new google.maps.LatLng({{ specific_region.map_center }}));
@@ -116,7 +111,9 @@ function initMap() {
   var locations = [
   {% for lo in location %}
 ['{{lo.name}}',{{lo.geolocation}},'{{lo.ipaddress}}',
-'{{ lo.status_1 }}', '{{ lo.status_2 }}', '{{ lo.status_3 }}', '{{ lo.status_4 }}', '{{ lo.ping_status }}'],
+'{{ lo.status_1 }}', '{{ lo.status_2 }}', '{{ lo.status_3 }}', '{{ lo.status_4 }}', '{{ lo.ping_status }}',
+'{{ lo.device_type }}'
+],
 {% endfor %}
 ];
 

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>SIMS</title>
+        <style>
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+h1 {
+  display: inline-block;
+  background-color: white;
+  border: 2px solid black;
+}
+
+
+#map {
+  height: 100%;
+  width: 100%;
+  background-color: grey;
+}
+#legend {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid #000;
+}
+
+#legend h3 {
+  margin-top: 0;
+}
+
+#legend img {
+  vertical-align: middle;
+}
+
+#summary {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid #000;
+}
+
+#summary h3 {
+  margin-top: 0;
+}
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<div id="form">
+<form style="padding-right: 10px;">
+    <select id="regionSelect" name="mapchange" onchange="updateMap(this.options[this.selectedIndex].value)">
+        <option value="ALL">ALL REGION</option>
+
+    </select>
+</form>
+</div>
+    <script>
+        function formUpdate(value) {
+            for(count = 0; count < value.length; count++) {
+                var selectValue = value[count].fields.code;
+                if ($("#regionSelect option[value='" + selectValue + "']").length == 0) {
+                    $('#regionSelect').append($('<option>')
+                        .val(value[count].fields.code)
+                        .text(value[count].fields.name));
+                }
+            }
+            //if (is_all == "true") {
+            //    $('#regionSelectAll').attr('selected','selected');
+            //}
+        };
+
+function initMap(google_map, locations, specific_region) {
+  //var center = google.maps.LatLng(google_map.MAPS_CENTER);
+  var center = 'lat: -1.233982000061532, lng: 116.83728437200422';
+  //var center = '-1.233982000061532, 116.83728437200422';
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: google_map.MAPS_ZOOM,
+    center: center
+  });
+
+  if (specific_region.status == "true") {
+    //map.setCenter(new google.maps.LatLng(specific_region.MAPS_CENTER));
+    map.setCenter(new google.maps.LatLng(specific_region.MAPS_CENTER));
+    map.setZoom(specific_region.MAPS_ZOOM);
+  }
+
+  var infowindow =  new google.maps.InfoWindow({});
+  var marker, count;
+  const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
+  const icons = {
+    sdwan: {
+      name: "Device OK (SNMP)",
+      icon: iconBase + "green-dot.png",
+      counter: 0,
+    },
+    vpnip: {
+      name: "Device OK (NO SNMP)",
+      icon: iconBase + "yellow-dot.png",
+      counter: 0,
+    },
+    nolive: {
+      name: "Device PROBLEM",
+      icon: iconBase + "red-dot.png",
+      counter: 0,
+    },
+  };
+
+
+  const parameter_status = {
+      "-1" : "DISABLE",
+      "0" : "PROBLEM",
+      "1" : "OK",
+  };
+
+  const summary_content = {
+        'sdwan': { status: 'Device OK (SNMP)', counter: 0 },
+        'vpnip': { status: 'Device OK (NO SNMP)', counter: 0 },
+        'nolive': { status: 'Device PROBLEM', counter: 0 },
+  };
+
+  var iconMarker = '';
+  var pingStatus = '';
+  var deviceType = '';
+
+  for (count = 0; count < location.length; count++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(google.maps.LatLng(locations[count].fields.geolocation)),
+      map: map,
+      title: locations[count].fields.name
+    });
+
+
+    // If the Some Channel is problem
+    if (locations[count].fields.ping_status == 'true')
+    {
+        iconMarker = icons['sdwan'].icon;
+        pingStatus = 'OK';
+        deviceType = 'sdwan';
+
+        // If one of the channel is  0, then it is a problem
+        if ((locations[count].fields.status_1 == 0 ) || (locations[count].fields.status_2 == 0 )
+            || (locations[count].fields.status_3 == 0 ) || (locations[count].fields.status_4 == 0 ))
+            {
+                iconMarker = icons['nolive'].icon;
+                deviceType = 'nolive';
+            }
+
+        // If all channels are disable then, it is NO SNMP
+        if ((locations[count].fields.status_1 == -1 ) && (locations[count].fields.status_2 == -1 )
+            && (locations[count].fields.status_3 == -1 ) && (locations[count].fields.status_4 == -1 ))
+            {
+                iconMarker = icons['vpnip'].icon;
+                deviceType = 'vpnip';
+            }
+    } else {
+        iconMarker = icons['nolive'].icon;
+        pingStatus = 'NOT OK';
+        deviceType = 'nolive';
+    }
+
+    let contentString =
+        '<div id="content">' +
+        '<div id="siteNotice"></div>' +
+        '<h2 id="firstHeading" class="firstHeading">' + locations[count].fields.name + '</h2>' +
+        '<div id="bodyContent">' +
+        '<p>' +
+        '<strong>IP:</strong> ' + locations[count].fields.ipaddress + '<br />' +
+        '<strong>Ping Status:</strong> ' + pingStatus + '<br />' +
+        '<strong>Channel 1:</strong> ' + parameter_status[locations[count].fields.status_1] + '<br />' +
+        '<strong>Channel 2:</strong> ' + parameter_status[locations[count].fields.status_2] + '<br />' +
+        '<strong>Channel 3:</strong> ' + parameter_status[locations[count].fields.status_3] + '<br />' +
+        '<strong>Channel 4:</strong> ' + parameter_status[locations[count].fields.status_4] + '<br />' +
+        '</p>' +
+        '</div>';
+
+
+    google.maps.event.addListener(marker, 'click', (function (marker, count) {
+        return function () {
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+        }
+    })(marker, count));
+
+    // Put the market
+    marker.setIcon(iconMarker);
+
+    // Summary count
+    icons[deviceType].counter += 1;
+
+  } // EndFor
+
+  // Title
+  const sims = document.getElementById("sims");
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(sims);
+
+  // Legend
+  /*
+  const legend = document.getElementById("legend");
+  for (const key in icons) {
+    const type = icons[key];
+    const name = type.name;
+    const icon = type.icon;
+    const counter = type.counter;
+    const div = document.createElement("div");
+
+    div.innerHTML = '<img src="' + icon + '"> ' + name + ' => ' + counter;
+    legend.appendChild(div);
+  }
+  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+  */
+
+  // Form Select
+  const form = document.getElementById("form");
+  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(form);
+
+
+}
+
+        function updateMap(value='ALL') {
+            var simsAPI = "http://localhost:8000/json/?q=" + value;
+            $.getJSON(simsAPI, function(data){
+                formUpdate(data.region);
+                initMap(data.google_map, data.location, data.specific_region);
+            });
+        };
+        updateMap('ALL');
+
+    </script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuueC18XSuMvS4atHKj5eIOo1LqQuoEro&callback=updateMap">
+</script>
+</body>
+</html>
