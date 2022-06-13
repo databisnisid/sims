@@ -6,27 +6,16 @@ import numpy as np
 
 
 def get(url):
-    #buffer = BytesIO()
-    buffer = StringIO
+    buffer = BytesIO()
     c = pycurl.Curl()
     c.setopt(c.URL, url)
-    #c.setopt(c.WRITEDATA, buffer)
+    c.setopt(c.WRITEDATA, buffer)
     c.setopt(c.CAINFO, certifi.where())
-    with open('/tmp/pfm.jpg', 'w') as f:
-        c.setopt(c.WRITEFUNCTION, f.write)
-        try:
-            c.perform()
-            result = True
-        except pycurl.error:
-            result = False
-
-    '''
     try:
         c.perform()
         result = True
     except pycurl.error:
         result = False
-    '''
 
     c.close()
 
