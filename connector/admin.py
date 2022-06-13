@@ -10,7 +10,7 @@ class ParameterAdmin(admin.ModelAdmin):
 
 
 class DeviceAdmin(admin.ModelAdmin):
-    list_display = ['name', 'parameter_type',
+    list_display = ['name', 'connector', 'parameter_type',
                     'parameter_1', 'parameter_2', 'parameter_3', 'parameter_4']
 
     class Meta:
