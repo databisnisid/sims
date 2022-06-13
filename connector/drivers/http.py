@@ -20,11 +20,17 @@ def get(url):
 
     ''' Detect Image Black '''
     if result:
-        image = cv2.imread(buffer.getvalue(), 0)
-        if cv2.countNonZero(image) == 0:
-            print("Image is black")
+        image = cv2.imread(buffer.write(), 0)
+        gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        if cv2.countNonZero(gray_version) == 0:
+            print("Error")
         else:
-            print("Colored image")
+            print("Image is fine")
+
+        #if cv2.countNonZero(image) == 0:
+        #    print("Image is black")
+        #else:
+        #    print("Colored image")
     else:
         pass
 
