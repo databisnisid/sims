@@ -1,7 +1,7 @@
 import pycurl
 import certifi
 from io import BytesIO
-import codecs
+#import codecs
 
 
 def get(url):
@@ -20,8 +20,8 @@ def get(url):
 
     if result:
         body = buffer.getvalue()
-        print(codecs.decode(body))
-        #print(body.decode('base64'))
+        #print(codecs.decode(body))
+        print(body.decode('utf-8'))
     else:
         pass
 
