@@ -1,12 +1,13 @@
 import pycurl
 import certifi
-from io import BytesIO
+from io import BytesIO, StringIO
 import cv2
 import numpy as np
 
 
 def get(url):
-    buffer = BytesIO()
+    #buffer = BytesIO()
+    buffer = StringIO
     c = pycurl.Curl()
     c.setopt(c.URL, url)
     #c.setopt(c.WRITEDATA, buffer)
