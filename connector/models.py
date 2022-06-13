@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 
 CONNECTOR = (
     ('SNMP', 'SNMP'),
+    ('HTTP', 'HTTP'),
 )
 
 

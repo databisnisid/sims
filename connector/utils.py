@@ -17,7 +17,8 @@ def ping(host_or_ip, packets=1, timeout=1000):
     if platform.system().lower() == 'windows':
         command = ['ping', '-n', str(packets), '-w', str(timeout), host_or_ip]
         # run parameters: capture output, discard error messages, do not show window
-        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, creationflags=0x08000000)
+        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                                stderr=subprocess.DEVNULL, creationflags=0x08000000)
         # 0x0800000 is a windows-only Popen flag to specify that a new process will not create a window.
         # On Python 3.7+, you can use a subprocess constant:
         #   result = subprocess.run(command, capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
@@ -27,7 +28,8 @@ def ping(host_or_ip, packets=1, timeout=1000):
     else:
         command = ['ping', '-c', str(packets), '-w', str(timeout), host_or_ip]
         # run parameters: discard output and error messages
-        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL)
         return result.returncode == 0
 
 
