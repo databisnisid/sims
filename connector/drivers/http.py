@@ -1,7 +1,7 @@
 import pycurl
 import certifi
 from io import BytesIO
-#import codecs
+import cv2
 
 
 def get(url):
@@ -18,11 +18,16 @@ def get(url):
 
     c.close()
 
+    ''' Detect Image Black '''
     if result:
-        body = buffer.getvalue()
-        #print(codecs.decode(body))
-        print(body.decode('utf-8'))
+        image = cv2.imread(buffer.getvalue(), 0)
+        if cv2.countNonZero(image) == 0:
+            print("Image is black")
+        else:
+            print("Colored image")
     else:
         pass
+
+    buffer.close()
 
     return result
