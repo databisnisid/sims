@@ -46,6 +46,7 @@ def update_parameter_status():
 
         # print(ping_result)
         loc.ping_status = ping_result
+        loc.save()
 
         if loc.device is not None and ping_result is True:
             #print(loc.device.parameter_type)
