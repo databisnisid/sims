@@ -22,8 +22,8 @@ def get(url):
     ''' Detect Image Black '''
     if result:
         file_bytes = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
-        image = cv2.imread('/tmp/pfm.jpg', 0)
-        #image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+        #image = cv2.imread('/tmp/pfm.jpg', 0)
+        image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
         gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         if cv2.countNonZero(gray_version) == 0:
             print("Error")
