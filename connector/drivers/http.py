@@ -1,5 +1,7 @@
 import pycurl
+import certifi
 from io import BytesIO
+import codecs
 
 
 def get(url):
@@ -7,13 +9,20 @@ def get(url):
     c = pycurl.Curl()
     c.setopt(c.URL, url)
     c.setopt(c.WRITEDATA, buffer)
-    #c.setopt(c.CAINFO, certifi.where())
-    c.perform()
+    c.setopt(c.CAINFO, certifi.where())
+    try:
+        c.perform()
+        result = True
+    except pycurl.error:
+        result = False
+
     c.close()
 
-    body = buffer.getvalue()
-    print(body)
-    # Body is a byte string.
-    # We have to know the encoding in order to print it to a text file
-    # such as standard output.
-    print(body.decode('base64'))
+    if result:
+        body = buffer.getvalue()
+        print(codecs.decode(body))
+        #print(body.decode('base64'))
+    else:
+        pass
+
+    return result
