@@ -1,4 +1,4 @@
-from .drivers.snmp import get
+from .drivers import snmp
 from location.models import Location
 from connector.models import Device
 from pysnmp import hlapi
@@ -56,7 +56,7 @@ def update_parameter_status():
             #if loc.device.parameter_type is not None:
 
                 try:
-                    result = get(loc.ipaddress, [loc.device.parameter_type.value], hlapi.CommunityData(COMMUNITY))
+                    result = snmp.get(loc.ipaddress, [loc.device.parameter_type.value], hlapi.CommunityData(COMMUNITY))
                 except RuntimeError:
                     result = None
 
@@ -92,7 +92,7 @@ def update_parameter_status():
             if values is not None:
 
                 try:
-                    result_parameter = get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
+                    result_parameter = snmp.get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
                 except RuntimeError:
                     result_parameter = None
 

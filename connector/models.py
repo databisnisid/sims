@@ -30,7 +30,7 @@ class Parameter(models.Model):
 
 class Device(models.Model):
     name = models.CharField(max_length=30, verbose_name=_('Device Brand'))
-    # type = models.CharField(max_length=30, unique=True, verbose_name=_('Device Type'))
+    connector = models.CharField(max_length=20, choices=CONNECTOR, default='SNMP', verbose_name=_('Connector Type'))
     parameter_type = models.ForeignKey(
         Parameter,
         on_delete=models.RESTRICT,
