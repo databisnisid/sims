@@ -13,8 +13,8 @@ def detect_black_image(buffer):
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    w = 200
-    h = 200
+    w = 100
+    h = 100
     height, width, channels = image.shape
     x = width/2 - w / 2
     y = height/2 - h / 2
