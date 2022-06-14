@@ -4,6 +4,7 @@ import io
 import cv2
 import numpy as np
 import re
+import time
 
 
 def detect_black_image(buffer):
@@ -25,6 +26,10 @@ def detect_black_image(buffer):
     #crop_image = image[y:y + h, x:x + w]
     crop_image = image[int(y):int(y + h), int(x):int(x + w)]
     gray_crop_image = cv2.cvtColor(crop_image, cv2.COLOR_BGR2GRAY)
+
+    ts = time.time()
+    gray_crop_image.imwrite('/tmp/yoga/test' + ts + '.jpg', gray_crop_image)
+
 
     #if cv2.countNonZero(gray_version) != 0:
 
