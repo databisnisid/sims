@@ -45,11 +45,10 @@ def get(url):
     c = pycurl.Curl()
     c.setopt(c.URL, url)
     c.setopt(c.WRITEDATA, buffer)
-    #c.setopt(c.CAINFO, certifi.where())
-    if re.search('http://admin', url):
+    c.setopt(c.CAINFO, certifi.where())
+    if re.search('http://admin:', url):
         c.setopt (c.HTTPAUTH, c.HTTPAUTH_DIGEST)
-        #c.setopt(c.username, "admin")
-        #c.setopt(c.password, "P4ssw0rd!")
+
     result = True
     try:
         c.perform()
