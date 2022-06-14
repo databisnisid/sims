@@ -78,14 +78,13 @@ class LocationAdmin(admin.ModelAdmin):
             'classes': ('grp-collapse grp-closed',),
             'fields': (
                 ('ipaddress', 'port'), 'device',
-                ('parameter_1', 'parameter_2', 'parameter_3', 'parameter_4')
             )
         }),
     )
 
     list_display = ['name', 'address', 'geolocation',
                     'ipaddress', 'device', 'device_type',
-                    'parameter_1', 'parameter_2', 'parameter_3', 'parameter_4',
+                    'status_1', 'status_2', 'status_3', 'status_4',
                     'region']
 
     exclude = ['created_at', 'updated_at']

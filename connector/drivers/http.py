@@ -11,18 +11,13 @@ def detect_black_image(buffer):
     buffer.seek(0)
     file_bytes = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-    #gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Crop Image from center to get sample area
     w = 200
     h = 200
     height, width, channels = image.shape
-    print('Height', height)
-    print('Width', width)
-    x = width/2 - w / 2
-    y = height/2 - h / 2
-    print('X', x)
-    print('Y', y)
+    x = width/2 - w/2
+    y = height/2 - h/2
     crop_image = image[int(y):int(y + h), int(x):int(x + w)]
 
     # Convert to Black White Image

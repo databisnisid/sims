@@ -62,22 +62,11 @@ class Location(models.Model):
         self.name = self.name.upper()
 
         if self.device is None:
-            self.parameter_1 = False
-            self.parameter_2 = False
-            self.parameter_3 = False
-            self.parameter_4 = False
-
-        if not self.parameter_1:
-            self.status_1 = -1
-
-        if not self.parameter_2:
-            self.status_2 = -1
-
-        if not self.parameter_3:
-            self.status_3 = -1
-
-        if not self.parameter_4:
-            self.status_4 = -1
+            self.parameter_1 = self.parameter_2 = self.parameter_3 = self.parameter_4 = False
+            self.status_1 = self.status_2 = self.status_3 = self.status_4 = -1
+        else:
+            self.parameter_1 = self.parameter_2 = self.parameter_3 = self.parameter_4 = True
+            self.status_1 = self.status_2 = self.status_3 = self.status_4 = 0
 
         user = get_current_user()
         try:
