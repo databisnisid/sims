@@ -50,6 +50,15 @@ class LocationForm(forms.ModelForm):
                 raise ValidationError(_('No Region is assigned to User. Please assign region to user in Account'))
 
 
+def status_string(value):
+    """ Convert integer value status to meaningful STRING """
+    if value == 0:
+        return 'DOWN'
+    elif value == 1:
+        return 'OK'
+    else:
+        return 'DISABLE'
+
 class LocationAdmin(admin.ModelAdmin):
     form = LocationForm
     formfield_overrides = {
@@ -111,39 +120,19 @@ class LocationAdmin(admin.ModelAdmin):
 
     @staticmethod
     def status_one(obj):
-        if obj.status_1 == 0:
-            return 'DOWN'
-        elif obj.status_1 == 1:
-            return 'OK'
-        else:
-            return 'DISABLE'
+        return status_string(obj.status_1)
 
     @staticmethod
     def status_two(obj):
-        if obj.status_2 == 0:
-            return 'DOWN'
-        elif obj.status_2 == 1:
-            return 'OK'
-        else:
-            return 'DISABLE'
+        return status_string(obj.status_2)
 
     @staticmethod
     def status_three(obj):
-        if obj.status_3 == 0:
-            return 'DOWN'
-        elif obj.status_3 == 1:
-            return 'OK'
-        else:
-            return 'DISABLE'
+        return status_string(obj.status_3)
 
     @staticmethod
     def status_four(obj):
-        if obj.status_4 == 0:
-            return 'DOWN'
-        elif obj.status_4 == 1:
-            return 'OK'
-        else:
-            return 'DISABLE'
+        return status_string(obj.status_4)
 
 '''
 class StackedItemInline(admin.StackedInline):
