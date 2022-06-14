@@ -20,12 +20,13 @@ def update_parameter_status():
 
         if loc.device is not None and ping_result is True:
             # Get Product Type if Device Type is Blank
-            if loc.device.parameter_type is not None and not loc.device_type.strip():
-                if loc.device.connector == 'SNMP':
+            if loc.device.connector == 'SNMP':
+                if loc.device.parameter_type is not None and not loc.device_type.strip():
                     update_snmp_device_type(loc)
-                    update_snmp_parameters(loc)
-                if loc.device.connector == 'HTTP':
-                    update_http_parameters(loc)
+                update_snmp_parameters(loc)
+
+            if loc.device.connector == 'HTTP':
+                update_http_parameters(loc)
 
 
 def construct_http_url(ipaddress, parameter):
