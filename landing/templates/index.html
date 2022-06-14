@@ -121,17 +121,27 @@ function initMap() {
   var marker, count;
   const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
   const icons = {
-      'sdwan': {
-        name: "Device All Channel OK",
+      'four': {
+        name: "Device With 4 Channels OK",
         icon: iconBase + "green-dot.png",
         counter: 0,
       },
       'three': {
-        name: "Device with 3 Channel OK",
+        name: "Device With 3 Channels OK",
         icon: iconBase + "blue-dot.png",
         counter: 0,
         },
-      'vpnip': {
+      'two': {
+        name: "Device With 2 Channels OK",
+        icon: iconBase + "purple-dot.png",
+        counter: 0,
+        },
+      'one': {
+        name: "Device With 1 Channels OK",
+        icon: iconBase + "pink-dot.png",
+        counter: 0,
+      },
+      'ping': {
         name: "Device PING OK",
         icon: iconBase + "yellow-dot.png",
         counter: 0,
@@ -164,9 +174,9 @@ function initMap() {
     // If the Some Channel is problem
     if (locations[count][8] == 'True')
     {
-        iconMarker = icons['sdwan'].icon;
+        iconMarker = icons['four'].icon;
         pingStatus = 'OK';
-        deviceType = 'sdwan';
+        deviceType = 'four';
 
         let counter = 0;
 
@@ -187,16 +197,24 @@ function initMap() {
         if ((locations[count][4] == '-1' ) && (locations[count][5] == '-1' )
             && (locations[count][6] == '-1' ) && (locations[count][7] == '-1' ))
             {
-                iconMarker = icons['vpnip'].icon;
-                deviceType = 'vpnip';
+                iconMarker = icons['ping'].icon;
+                deviceType = 'ping';
             }
-        if (counter >= 3 ) {
+        if (counter == 1 ) {
+            iconMarker = icons['one'].icon;
+            deviceType = 'one';
+        }
+        if (counter == 2 ) {
+            iconMarker = icons['three'].icon;
+            deviceType = 'three';
+        }
+        if (counter == 3 ) {
             iconMarker = icons['three'].icon;
             deviceType = 'three';
         }
         if (counter == 4 ) {
-            iconMarker = icons['sdwan'].icon;
-            deviceType = 'sdwan';
+            iconMarker = icons['four'].icon;
+            deviceType = 'four';
         }
 
 
