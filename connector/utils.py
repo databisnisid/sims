@@ -1,40 +1,9 @@
-from .drivers import snmp
+from .drivers import snmp, http, ping
 from location.models import Location
-from connector.models import Device
 from pysnmp import hlapi
-import platform
-import subprocess
-
-
-def ping(host_or_ip, packets=1, timeout=1000):
-    """ Calls system "ping" command, returns True if ping succeeds.
-    Required parameter: host_or_ip (str, address of host to ping)
-    Optional parameters: packets (int, number of retries), timeout (int, ms to wait for response)
-    Does not show any output, either as popup window or in command line.
-    Python 3.5+, Windows and Linux compatible
-    """
-    # The ping command is the same for Windows and Linux, except for the "number of packets" flag.
-    if platform.system().lower() == 'windows':
-        command = ['ping', '-n', str(packets), '-w', str(timeout), host_or_ip]
-        # run parameters: capture output, discard error messages, do not show window
-        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                                stderr=subprocess.DEVNULL, creationflags=0x08000000)
-        # 0x0800000 is a windows-only Popen flag to specify that a new process will not create a window.
-        # On Python 3.7+, you can use a subprocess constant:
-        #   result = subprocess.run(command, capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
-        # On windows 7+, ping returns 0 (ok) when host is not reachable; to be sure host is responding,
-        # we search the text "TTL=" on the command output. If it's there, the ping really had a response.
-        return result.returncode == 0 and b'TTL=' in result.stdout
-    else:
-        command = ['ping', '-c', str(packets), '-w', str(timeout), host_or_ip]
-        # run parameters: discard output and error messages
-        result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-                                stderr=subprocess.DEVNULL)
-        return result.returncode == 0
 
 
 COMMUNITY = 'public'
-# SNMP_OID = '1.3.6.1.4.1'
 
 
 def update_parameter_status():
@@ -44,80 +13,107 @@ def update_parameter_status():
 
     for loc in location:
         # Ping First
-        ping_result = ping(loc.ipaddress)
-
-        # print(ping_result)
+        ping_result = ping.ping(loc.ipaddress)
         loc.ping_status = ping_result
         loc.save()
 
         if loc.device is not None and ping_result is True:
-            #print(loc.device.parameter_type)
-            #print(loc.device_type)
-
             # Get Product Type if Device Type is Blank
             if loc.device.parameter_type is not None and not loc.device_type.strip():
-            #if loc.device.parameter_type is not None:
+                if loc.device.connector is 'SNMP':
+                    update_snmp_device_type(loc)
+                    update_snmp_parameters(loc)
+                if loc.device.connector is 'HTTP':
+                    update_http_parameters(loc)
 
-                try:
-                    result = snmp.get(loc.ipaddress, [loc.device.parameter_type.value], hlapi.CommunityData(COMMUNITY))
-                except RuntimeError:
-                    result = None
 
-                if result is None:
-                    print('Remove Device', loc.device, 'from', loc.name)
-                    loc.device = None
-                else:
-                    loc.device_type = result[loc.device.parameter_type.value]
-                    print('Get Result', loc.device_type, 'for', loc.name)
+def construct_http_url(ipaddress, parameter):
+    """ Construct URL """
+    return 'http://' + ipaddress + '/' + parameter
 
-                loc.save()
 
-            # Get Product Type if Device Type contains OID
-            """
-            if SNMP_OID in loc.device.type:
-                device = Device.objects.get(id=loc.device.id)
-                result = get(loc.ipaddress, [device.type], hlapi.CommunityData(COMMUNITY))
-                device.type = result[device.type]
-                device.save()
-            """
+def get_http_status(url):
+    """ Get Status of Device """
+    result, is_image_ok = http.get(url)
+    if result:
+        if is_image_ok:
+            status = True
+        else:
+            status = False
+    else:
+        status = False
 
-        if loc.device is not None and ping_result is True:
-            values = []
-            if loc.device.parameter_1.value is not None:
-                values += [loc.device.parameter_1.value]
-            if loc.device.parameter_2.value is not None:
-                values += [loc.device.parameter_2.value]
-            if loc.device.parameter_3.value is not None:
-                values += [loc.device.parameter_3.value]
-            if loc.device.parameter_4.value is not None:
-                values += [loc.device.parameter_4.value]
+    return status
 
-            if values is not None:
 
-                try:
-                    result_parameter = snmp.get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
-                except RuntimeError:
-                    result_parameter = None
+def get_http_parameter(ipaddress, parameter):
+    """ Get Each Parameter Status """
+    return get_http_status(construct_http_url(ipaddress, parameter))
 
-                if result_parameter:
-                    if loc.parameter_1:
-                        print(loc.device.parameter_1.value, result_parameter[loc.device.parameter_1.value])
-                        loc.status_1 = result_parameter[loc.device.parameter_1.value]
-                        print(loc.status_1)
 
-                    if loc.parameter_2:
-                        print(loc.device.parameter_2.value, result_parameter[loc.device.parameter_2.value])
-                        loc.status_2 = result_parameter[loc.device.parameter_2.value]
-                        print(loc.status_2)
+def update_http_parameters(loc):
+    """ Get Parameter Status for HTTP Connector """
+    values = {}
 
-                    if loc.parameter_3:
-                        print(loc.device.parameter_3.value, result_parameter[loc.device.parameter_3.value])
-                        loc.status_3 = result_parameter[loc.device.parameter_3.value]
-                        print(loc.status_3)
+    if loc.device.parameter_1.value is not None:
+        values += loc.device.parameter_1.value
+    if loc.device.parameter_2.value is not None:
+        values += loc.device.parameter_2.value
+    if loc.device.parameter_3.value is not None:
+        values += loc.device.parameter_3.value
+    if loc.device.parameter_4.value is not None:
+        values += loc.device.parameter_4.value
 
-                    if loc.parameter_4:
-                        print(loc.device.parameter_4.value, result_parameter[loc.device.parameter_4.value])
-                        loc.status_4 = result_parameter[loc.device.parameter_4.value]
-                        print(loc.status_4)
+    for value in values:
+        print(value)
+        loc.status_1 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_1
+        loc.status_2 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_2
+        loc.status_3 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_3
+        loc.status_4 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_4
 
-                    loc.save()
+    loc.save()
+
+
+def update_snmp_device_type(loc):
+    """ Get Product Type if Device Type is Blank """
+    try:
+        result = snmp.get(loc.ipaddress, [loc.device.parameter_type.value], hlapi.CommunityData(COMMUNITY))
+    except RuntimeError:
+        result = None
+
+    if result is None:
+        print('Remove Device', loc.device, 'from', loc.name)
+        loc.device = None
+    else:
+        loc.device_type = result[loc.device.parameter_type.value]
+        print('Get Result', loc.device_type, 'for', loc.name)
+
+    loc.save()
+
+
+def update_snmp_parameters(loc):
+    """ Get SNMP Status for each Parameter """
+    values = []
+
+    if loc.device.parameter_1.value is not None:
+        values += [loc.device.parameter_1.value]
+    if loc.device.parameter_2.value is not None:
+        values += [loc.device.parameter_2.value]
+    if loc.device.parameter_3.value is not None:
+        values += [loc.device.parameter_3.value]
+    if loc.device.parameter_4.value is not None:
+        values += [loc.device.parameter_4.value]
+
+    if values is not None:
+        try:
+            result = snmp.get(loc.ipaddress, values, hlapi.CommunityData(COMMUNITY))
+        except RuntimeError:
+            result = None
+
+        if result:
+            loc.status_1 = result[loc.device.parameter_1.value] if loc.parameter_1 else loc.status_1
+            loc.status_2 = result[loc.device.parameter_2.value] if loc.parameter_2 else loc.status_2
+            loc.status_3 = result[loc.device.parameter_3.value] if loc.parameter_3 else loc.status_3
+            loc.status_4 = result[loc.device.parameter_4.value] if loc.parameter_4 else loc.status_4
+
+            loc.save()

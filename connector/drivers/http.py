@@ -6,6 +6,7 @@ import numpy as np
 
 
 def get(url):
+    """ Check Channel and if picture snapshot is BLANK or not """
     buffer = BytesIO()
     c = pycurl.Curl()
     c.setopt(c.URL, url)
