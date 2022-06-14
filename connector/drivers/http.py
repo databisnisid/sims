@@ -4,7 +4,6 @@ import io
 import cv2
 import numpy as np
 import re
-import time
 
 
 def detect_black_image(buffer):
@@ -12,10 +11,11 @@ def detect_black_image(buffer):
     buffer.seek(0)
     file_bytes = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-    gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    w = 50
-    h = 50
+    # Crop Image from center to get sample area
+    w = 200
+    h = 200
     height, width, channels = image.shape
     print('Height', height)
     print('Width', width)
@@ -23,17 +23,13 @@ def detect_black_image(buffer):
     y = height/2 - h / 2
     print('X', x)
     print('Y', y)
-    #crop_image = image[y:y + h, x:x + w]
     crop_image = image[int(y):int(y + h), int(x):int(x + w)]
+
+    # Convert to Black White Image
     gray_crop_image = cv2.cvtColor(crop_image, cv2.COLOR_BGR2GRAY)
+    (thresh, black_white) = cv2.threshold(gray_crop_image, 127, 255, cv2.THRESH_BINARY)
 
-    ts = time.time()
-    cv2.imwrite('/tmp/yoga/test' + str(ts) + '.jpg', gray_crop_image)
-
-
-    #if cv2.countNonZero(gray_version) != 0:
-
-    if cv2.countNonZero(gray_crop_image) != 0:
+    if cv2.countNonZero(black_white) != 0:
         print("Image is fine")
         is_image_ok = True
     else:
