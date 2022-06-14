@@ -3,6 +3,7 @@ import certifi
 import io
 import cv2
 import numpy as np
+import re
 
 
 def detect_black_image(buffer):
@@ -29,7 +30,8 @@ def get(url):
     c.setopt(c.URL, url)
     c.setopt(c.WRITEDATA, buffer)
     c.setopt(c.CAINFO, certifi.where())
-    #c.setopt(c.httpauth, c.httpauth_basic)
+    if re.search('http://admin', url):
+        c.setopt(c.httpauth, c.httpauth_basic)
     result = True
     try:
         c.perform()
