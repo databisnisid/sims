@@ -18,7 +18,8 @@ def detect_black_image(buffer):
     center = gray_version.shape / 2
     x = center[1] - w / 2
     y = center[0] - h / 2
-    crop_img = gray_version[y:y + h, x:x + w]
+    #crop_img = gray_version[y:y + h, x:x + w]
+    crop_img = gray_version[int(y):int(y + h), int(x):int(x + w)]
 
     #if cv2.countNonZero(gray_version) != 0:
 
