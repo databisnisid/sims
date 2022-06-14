@@ -15,17 +15,19 @@ def update_parameter_status():
         # Ping First
         ping_result = ping.ping(loc.ipaddress)
         loc.ping_status = ping_result
-        print(loc.ipaddress, ping_result)
+        print('PING', loc.ipaddress, ping_result)
         loc.save()
 
         if loc.device is not None and ping_result is True:
             # Get Product Type if Device Type is Blank
+            print(loc.device.connector)
             if loc.device.connector == 'SNMP':
                 if loc.device.parameter_type is not None and not loc.device_type.strip():
                     update_snmp_device_type(loc)
                 update_snmp_parameters(loc)
 
             if loc.device.connector == 'HTTP':
+                print('Check HTTP')
                 update_http_parameters(loc)
 
 
