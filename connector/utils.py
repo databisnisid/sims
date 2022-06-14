@@ -52,22 +52,29 @@ def get_http_status(url):
 
 
 def get_http_parameter(ipaddress, parameter):
-    """ Get Each Parameter Status """
+    """ Get Status per Parameter """
     return get_http_status(construct_http_url(ipaddress, parameter))
+
+
+def values_array(loc):
+    """ Return Array list of Parameter value """
+    values = []
+
+    if loc.device.parameter_1.value is not None:
+        values += [loc.device.parameter_1.value]
+    if loc.device.parameter_2.value is not None:
+        values += [loc.device.parameter_2.value]
+    if loc.device.parameter_3.value is not None:
+        values += [loc.device.parameter_3.value]
+    if loc.device.parameter_4.value is not None:
+        values += [loc.device.parameter_4.value]
+
+    return values
 
 
 def update_http_parameters(loc):
     """ Get Parameter Status for HTTP Connector """
-    values = {}
-
-    if loc.device.parameter_1.value is not None:
-        values += loc.device.parameter_1.value
-    if loc.device.parameter_2.value is not None:
-        values += loc.device.parameter_2.value
-    if loc.device.parameter_3.value is not None:
-        values += loc.device.parameter_3.value
-    if loc.device.parameter_4.value is not None:
-        values += loc.device.parameter_4.value
+    values = values_array(loc)
 
     for value in values:
         print(value)
@@ -98,16 +105,7 @@ def update_snmp_device_type(loc):
 
 def update_snmp_parameters(loc):
     """ Get SNMP Status for each Parameter """
-    values = []
-
-    if loc.device.parameter_1.value is not None:
-        values += [loc.device.parameter_1.value]
-    if loc.device.parameter_2.value is not None:
-        values += [loc.device.parameter_2.value]
-    if loc.device.parameter_3.value is not None:
-        values += [loc.device.parameter_3.value]
-    if loc.device.parameter_4.value is not None:
-        values += [loc.device.parameter_4.value]
+    values = values_array(loc)
 
     if values is not None:
         try:
