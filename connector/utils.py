@@ -76,10 +76,10 @@ def update_http_parameters(loc):
 
     for value in values:
         #print(value)
-        loc.status_1 = 1 if (get_http_parameter(loc.ipaddress, value)) else 0
-        loc.status_2 = 1 if (get_http_parameter(loc.ipaddress, value)) else 0
-        loc.status_3 = 1 if (get_http_parameter(loc.ipaddress, value)) else 0
-        loc.status_4 = 1 if (get_http_parameter(loc.ipaddress, value)) else 0
+        loc.status_1 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
+        loc.status_2 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
+        loc.status_3 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
+        loc.status_4 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
         print(timezone.now, 'HTTP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
     loc.save()
@@ -113,10 +113,10 @@ def update_snmp_parameters(loc):
             result = None
 
         if result:
-            loc.status_1 = result[loc.device.parameter_1.value] if loc.parameter_1 else 0
-            loc.status_2 = result[loc.device.parameter_2.value] if loc.parameter_2 else 0
-            loc.status_3 = result[loc.device.parameter_3.value] if loc.parameter_3 else 0
-            loc.status_4 = result[loc.device.parameter_4.value] if loc.parameter_4 else 0
+            loc.status_1 = result[loc.device.parameter_1.value] if loc.parameter_1 is True else 0
+            loc.status_2 = result[loc.device.parameter_2.value] if loc.parameter_2 is True else 0
+            loc.status_3 = result[loc.device.parameter_3.value] if loc.parameter_3 is True else 0
+            loc.status_4 = result[loc.device.parameter_4.value] if loc.parameter_4 is True else 0
             print(timezone.now, 'SNMP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
             loc.save()
