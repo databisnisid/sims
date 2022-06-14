@@ -13,8 +13,8 @@ def detect_black_image(buffer):
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     gray_version = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    w = 100
-    h = 100
+    w = 50
+    h = 50
     height, width, channels = image.shape
     print('Height', height)
     print('Width', width)
@@ -24,11 +24,11 @@ def detect_black_image(buffer):
     print('Y', y)
     #crop_image = image[y:y + h, x:x + w]
     crop_image = image[int(y):int(y + h), int(x):int(x + w)]
-    crop_image_gray = cv2.cvtColor(crop_image, cv2.COLOR_BGR2GRAY)
+    gray_crop_image = cv2.cvtColor(crop_image, cv2.COLOR_BGR2GRAY)
 
     #if cv2.countNonZero(gray_version) != 0:
 
-    if cv2.countNonZero(crop_image_gray) != 0:
+    if cv2.countNonZero(gray_crop_image) != 0:
         print("Image is fine")
         is_image_ok = True
     else:
