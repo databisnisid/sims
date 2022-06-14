@@ -15,6 +15,7 @@ def update_parameter_status():
         # Ping First
         ping_result = ping.ping(loc.ipaddress)
         loc.ping_status = ping_result
+        print(loc.ipaddress, ping_result)
         loc.save()
 
         if loc.device is not None and ping_result is True:
@@ -29,6 +30,7 @@ def update_parameter_status():
 
 def construct_http_url(ipaddress, parameter):
     """ Construct URL """
+    print('http://' + ipaddress + '/' + parameter)
     return 'http://' + ipaddress + '/' + parameter
 
 
@@ -115,5 +117,6 @@ def update_snmp_parameters(loc):
             loc.status_2 = result[loc.device.parameter_2.value] if loc.parameter_2 else loc.status_2
             loc.status_3 = result[loc.device.parameter_3.value] if loc.parameter_3 else loc.status_3
             loc.status_4 = result[loc.device.parameter_4.value] if loc.parameter_4 else loc.status_4
+            print('Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
             loc.save()
