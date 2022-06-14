@@ -75,7 +75,7 @@ def update_http_parameters(loc):
     values = values_array(loc)
 
     for value in values:
-        #print(value)
+        print(value)
         loc.status_1 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
         loc.status_2 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
         loc.status_3 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
