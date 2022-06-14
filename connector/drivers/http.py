@@ -29,6 +29,7 @@ def get(url):
     c.setopt(c.URL, url)
     c.setopt(c.WRITEDATA, buffer)
     c.setopt(c.CAINFO, certifi.where())
+    c.setopt(c.httpauth, c.httpauth_basic)
     result = True
     try:
         c.perform()
