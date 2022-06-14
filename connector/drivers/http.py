@@ -29,7 +29,7 @@ def get(url):
     c = pycurl.Curl()
     c.setopt(c.URL, url)
     c.setopt(c.WRITEDATA, buffer)
-    c.setopt(c.CAINFO, certifi.where())
+    #c.setopt(c.CAINFO, certifi.where())
     if re.search('http://admin', url):
         c.setopt (c.httpauth, c.httpauth_digest)
         #c.setopt(c.username, "admin")
