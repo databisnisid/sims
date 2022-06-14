@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from crum import get_current_user
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
+from django.utils.html import format_html
 
 
 class LocationForm(forms.ModelForm):
@@ -94,8 +95,11 @@ class LocationAdmin(admin.ModelAdmin):
 
     list_display = ['name', 'address', 'geolocation',
                     'ipaddress', 'device', 'device_type', 'ping_status',
+                    'image_tag',
                     'status_one', 'status_two', 'status_three', 'status_four',
                     'region']
+
+    #list_display_links = ['snapshot_1']
 
     exclude = ['created_at', 'updated_at']
     readonly_fields = ['device_type']
@@ -119,6 +123,11 @@ class LocationAdmin(admin.ModelAdmin):
 
             return Location.objects.filter(region=region)
 
+    def image_tag(self, obj):
+        return format_html('<img src="lsajdla" />')
+
+    image_tag.short_description = 'Image'
+
     @staticmethod
     def status_one(obj):
         return status_string(obj.status_1)
@@ -134,6 +143,7 @@ class LocationAdmin(admin.ModelAdmin):
     @staticmethod
     def status_four(obj):
         return status_string(obj.status_4)
+
 
 '''
 class StackedItemInline(admin.StackedInline):

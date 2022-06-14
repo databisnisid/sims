@@ -4,6 +4,12 @@ import io
 import cv2
 import numpy as np
 import re
+#from django.conf import settings
+
+
+def get_ipaddress(value):
+    """ Return IP Address array from String """
+    return re.findall(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", value)
 
 
 def detect_black_image(buffer):
