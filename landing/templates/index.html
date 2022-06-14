@@ -122,27 +122,27 @@ function initMap() {
   const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
   const icons = {
       'four': {
-        name: "Device With 4 Channels OK",
+        name: "Device With 4 Channels",
         icon: iconBase + "green-dot.png",
         counter: 0,
       },
       'three': {
-        name: "Device With 3 Channels OK",
+        name: "Device With 3 Channels",
         icon: iconBase + "blue-dot.png",
         counter: 0,
         },
       'two': {
-        name: "Device With 2 Channels OK",
+        name: "Device With 2 Channels",
         icon: iconBase + "purple-dot.png",
         counter: 0,
         },
       'one': {
-        name: "Device With 1 Channels OK",
+        name: "Device With 1 Channels",
         icon: iconBase + "orange-dot.png",
         counter: 0,
       },
       'ping': {
-        name: "Device PING OK",
+        name: "Device PING Only",
         icon: iconBase + "yellow-dot.png",
         counter: 0,
         },
@@ -268,7 +268,7 @@ function initMap() {
     const counter = type.counter;
     const div = document.createElement("div");
 
-    div.innerHTML = '<img src="' + icon + '"> ' + name + ' => ' + counter;
+    div.innerHTML = '<img src="' + icon + '"> ' + name + ' => ' + counter + '&nbsp;&nbsp;';
     legend.appendChild(div);
   }
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);

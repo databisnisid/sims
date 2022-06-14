@@ -16,7 +16,7 @@ def update_parameter_status():
         # Ping First
         ping_result = ping.ping(loc.ipaddress)
         loc.ping_status = ping_result
-        print(timezone.now, 'PING', loc.ipaddress, ping_result)
+        print('PING', loc.ipaddress, ping_result)
         loc.save()
 
         if loc.device is not None and ping_result is True:
@@ -28,7 +28,7 @@ def update_parameter_status():
                 update_snmp_parameters(loc)
 
             if loc.device.connector == 'HTTP':
-                print(timezone.now, 'Check HTTP')
+                print('Check HTTP')
                 update_http_parameters(loc)
 
 
@@ -96,7 +96,7 @@ def update_snmp_device_type(loc):
         result = None
 
     if result is None:
-        print(timezone.now, 'Remove Device', loc.device, 'from', loc.name)
+        print('Remove Device', loc.device, 'from', loc.name)
         loc.device = None
     else:
         loc.device_type = result[loc.device.parameter_type.value]
