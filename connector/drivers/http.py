@@ -29,9 +29,9 @@ def get(url):
     c.setopt(c.URL, url)
     c.setopt(c.WRITEDATA, buffer)
     c.setopt(c.CAINFO, certifi.where())
+    result = True
     try:
         c.perform()
-        result = True
     except pycurl.error:
         result = False
 
