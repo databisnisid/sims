@@ -34,8 +34,7 @@ def update_parameter_status():
 
 def construct_http_url(ipaddress, parameter):
     """ Construct URL """
-    print('http://' + ipaddress + '/' + parameter)
-    return 'http://' + ipaddress + '/' + parameter
+    return parameter.replace('__IPADDRESS__', ipaddress)
 
 
 def get_http_status(url):

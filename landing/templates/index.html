@@ -156,19 +156,6 @@ function initMap() {
       title: locations[count][0]
     });
 
-/*
-    if (locations[count][8] == 'True')
-    {
-        iconMarker = icons['sdwan'].icon;
-        pingStatus = 'OK';
-        deviceType = 'sdwan';
-    } else {
-        iconMarker = icons['nolive'].icon;
-        pingStatus = 'NOT OK';
-        deviceType = 'nolive';
-    }
-*/
-
     // If the Some Channel is problem
     if (locations[count][8] == 'True')
     {
@@ -257,21 +244,6 @@ function initMap() {
     legend.appendChild(div);
   }
   map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
-
-  // Summary
-  /*
-  const summary = document.getElementById("summary");
-  for (const key in summary_content) {
-    const type = summary_content[key];
-    const counter = type.counter;
-    const status = type.status;
-    const div = document.createElement("div");
-
-    div.innerHTML = '<h4>' + status + ' => ' + counter + '</h4>';
-    summary.appendChild(div);
-  }
-  map.controls[google.maps.ControlPosition.RIGHT_TOP].push(summary);
-  */
 
   // Form Select
   const form = document.getElementById("form");
