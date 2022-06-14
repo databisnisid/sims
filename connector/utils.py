@@ -83,7 +83,7 @@ def update_http_parameters(loc):
     loc.status_3 = status[loc.device.parameter_3.value]
     loc.status_4 = status[loc.device.parameter_4.value]
 
-    print(timezone.now, 'HTTP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
+    print('HTTP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
     loc.save()
 
@@ -100,7 +100,7 @@ def update_snmp_device_type(loc):
         loc.device = None
     else:
         loc.device_type = result[loc.device.parameter_type.value]
-        print(timezone.now, 'Get Result', loc.device_type, 'for', loc.name)
+        print('Get Result', loc.device_type, 'for', loc.name)
 
     loc.save()
 
@@ -120,6 +120,6 @@ def update_snmp_parameters(loc):
             loc.status_2 = result[loc.device.parameter_2.value] if loc.parameter_2 is True else 0
             loc.status_3 = result[loc.device.parameter_3.value] if loc.parameter_3 is True else 0
             loc.status_4 = result[loc.device.parameter_4.value] if loc.parameter_4 is True else 0
-            print(timezone.now, 'SNMP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
+            print('SNMP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
             loc.save()

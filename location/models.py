@@ -66,7 +66,7 @@ class Location(models.Model):
             self.status_1 = self.status_2 = self.status_3 = self.status_4 = -1
         else:
             self.parameter_1 = self.parameter_2 = self.parameter_3 = self.parameter_4 = True
-            self.status_1 = self.status_2 = self.status_3 = self.status_4 = 0
+            #self.status_1 = self.status_2 = self.status_3 = self.status_4 = 0
 
         user = get_current_user()
         try:

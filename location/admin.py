@@ -59,6 +59,7 @@ def status_string(value):
     else:
         return 'DISABLE'
 
+
 class LocationAdmin(admin.ModelAdmin):
     form = LocationForm
     formfield_overrides = {
