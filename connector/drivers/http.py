@@ -28,7 +28,7 @@ def detect_black_image(buffer):
     gray_crop_image = cv2.cvtColor(crop_image, cv2.COLOR_BGR2GRAY)
 
     ts = time.time()
-    gray_crop_image.imwrite('/tmp/yoga/test' + ts + '.jpg', gray_crop_image)
+    crop_image.imwrite('/tmp/yoga/test' + ts + '.jpg', gray_crop_image)
 
 
     #if cv2.countNonZero(gray_version) != 0:
