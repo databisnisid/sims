@@ -182,6 +182,13 @@ function initMap() {
         pingStatus = 'OK';
         deviceType = 'sdwan';
 
+        let counter = 0;
+
+        if (locations[count][4] == 1) counter += 1;
+        if (locations[count][5] == 1) counter += 1;
+        if (locations[count][6] == 1) counter += 1;
+        if (locations[count][7] == 1) counter += 1;
+
         // If one of the channel is  0, then it is a problem
         if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
             || (locations[count][6] == '0' ) || (locations[count][7] == '0' ))
@@ -197,6 +204,11 @@ function initMap() {
                 iconMarker = icons['vpnip'].icon;
                 deviceType = 'vpnip';
             }
+        if (counter >= 3 ) {
+            iconMarker = icons['sdwan'].icon;
+            deviceType = 'sdwan';
+        }
+
     } else {
         iconMarker = icons['nolive'].icon;
         pingStatus = 'NOT OK';
