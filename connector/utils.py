@@ -73,15 +73,18 @@ def values_array(loc):
 def update_http_parameters(loc):
     """ Get Parameter Status for HTTP Connector """
     values = values_array(loc)
+    status = {}
 
     print(values)
     for value in values:
-        #print(value)
-        loc.status_1 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
-        loc.status_2 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
-        loc.status_3 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
-        loc.status_4 = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
-        print(timezone.now, 'HTTP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
+        status[value] = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
+
+    loc.status_1 = status[loc.device.parameter_1.value]
+    loc.status_2 = status[loc.device.parameter_2.value]
+    loc.status_3 = status[loc.device.parameter_3.value]
+    loc.status_4 = status[loc.device.parameter_4.value]
+
+    print(timezone.now, 'HTTP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
     loc.save()
 
