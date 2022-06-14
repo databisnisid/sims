@@ -5,6 +5,8 @@ from django.utils import timezone
 
 
 COMMUNITY = 'public'
+PING_PACKET = 1
+PING_TIMEOUT = 3
 
 
 def update_parameter_status():
@@ -14,7 +16,7 @@ def update_parameter_status():
 
     for loc in location:
         # Ping First
-        ping_result = ping.ping(loc.ipaddress)
+        ping_result = ping.ping(loc.ipaddress, PING_PACKET, PING_TIMEOUT)
         loc.ping_status = ping_result
         print('PING', loc.ipaddress, ping_result)
         loc.save()
