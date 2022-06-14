@@ -84,11 +84,12 @@ class LocationAdmin(admin.ModelAdmin):
 
     list_display = ['name', 'address', 'geolocation',
                     'ipaddress', 'device', 'device_type',
-                    'status_1', 'status_2', 'status_3', 'status_4',
+                    'status_one', 'status_two', 'status_three', 'status_four',
                     'region']
 
     exclude = ['created_at', 'updated_at']
     readonly_fields = ['device_type']
+    change_list_template = 'admin/change_list.html'
 
     class Meta:
         model = Location
@@ -107,6 +108,42 @@ class LocationAdmin(admin.ModelAdmin):
                 region = None
 
             return Location.objects.filter(region=region)
+
+    @staticmethod
+    def status_one(obj):
+        if obj.status_1 == 0:
+            return 'DOWN'
+        elif obj.status_1 == 1:
+            return 'OK'
+        else:
+            return 'DISABLE'
+
+    @staticmethod
+    def status_two(obj):
+        if obj.status_2 == 0:
+            return 'DOWN'
+        elif obj.status_2 == 1:
+            return 'OK'
+        else:
+            return 'DISABLE'
+
+    @staticmethod
+    def status_three(obj):
+        if obj.status_3 == 0:
+            return 'DOWN'
+        elif obj.status_3 == 1:
+            return 'OK'
+        else:
+            return 'DISABLE'
+
+    @staticmethod
+    def status_four(obj):
+        if obj.status_4 == 0:
+            return 'DOWN'
+        elif obj.status_4 == 1:
+            return 'OK'
+        else:
+            return 'DISABLE'
 
 '''
 class StackedItemInline(admin.StackedInline):
