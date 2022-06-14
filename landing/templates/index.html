@@ -122,12 +122,12 @@ function initMap() {
   const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
   const icons = {
     sdwan: {
-      name: "Device OK (SNMP)",
+      name: "Device OK",
       icon: iconBase + "green-dot.png",
       counter: 0,
     },
     vpnip: {
-      name: "Device OK (NO SNMP)",
+      name: "Device OK (PING)",
       icon: iconBase + "yellow-dot.png",
       counter: 0,
     },
@@ -143,12 +143,6 @@ function initMap() {
   "-1" : "DISABLE",
   "0" : "DOWN",
   "1" : "OK",
-  };
-
-  const summary_content = {
-        'sdwan': { status: 'Device OK', counter: 0 },
-        'vpnip': { status: 'Device OK (Ping Only)', counter: 0 },
-        'nolive': { status: 'Device PROBLEM', counter: 0 },
   };
 
   var iconMarker = '';
