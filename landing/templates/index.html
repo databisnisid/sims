@@ -121,21 +121,26 @@ function initMap() {
   var marker, count;
   const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
   const icons = {
-    sdwan: {
-      name: "Device OK",
-      icon: iconBase + "green-dot.png",
-      counter: 0,
-    },
-    vpnip: {
-      name: "Device OK (PING)",
-      icon: iconBase + "yellow-dot.png",
-      counter: 0,
-    },
-    nolive: {
-      name: "Device PROBLEM",
-      icon: iconBase + "red-dot.png",
-      counter: 0,
-    },
+      'sdwan': {
+        name: "Device All Channel OK",
+        icon: iconBase + "green-dot.png",
+        counter: 0,
+      },
+      'three': {
+        name: "Device with 3 Channel OK",
+        icon: iconBase + "blue-dot.png",
+        counter: 0,
+        },
+      'vpnip': {
+        name: "Device PING OK",
+        icon: iconBase + "yellow-dot.png",
+        counter: 0,
+        },
+      'nolive': {
+        name: "Device PROBLEM",
+        icon: iconBase + "red-dot.png",
+        counter: 0,
+      },
   };
 
 
@@ -186,9 +191,14 @@ function initMap() {
                 deviceType = 'vpnip';
             }
         if (counter >= 3 ) {
+            iconMarker = icons['three'].icon;
+            deviceType = 'three';
+        }
+        if (counter == 4 ) {
             iconMarker = icons['sdwan'].icon;
             deviceType = 'sdwan';
         }
+
 
     } else {
         iconMarker = icons['nolive'].icon;
