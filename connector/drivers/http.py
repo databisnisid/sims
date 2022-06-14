@@ -20,7 +20,7 @@ def detect_black_image(buffer):
     y = height/2 - h / 2
     #crop_image = image[y:y + h, x:x + w]
     crop_image = gray_version[int(y):int(y + h), int(x):int(x + w)]
-    crop_image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    crop_image_gray = cv2.cvtColor(crop_image, cv2.COLOR_BGR2GRAY)
 
     #if cv2.countNonZero(gray_version) != 0:
 
