@@ -92,7 +92,7 @@ class LocationAdmin(admin.ModelAdmin):
     )
 
     list_display = ['name', 'address', 'geolocation',
-                    'ipaddress', 'device', 'device_type',
+                    'ipaddress', 'device', 'device_type', 'ping_status',
                     'status_one', 'status_two', 'status_three', 'status_four',
                     'region']
 
