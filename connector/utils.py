@@ -1,6 +1,7 @@
 from .drivers import snmp, http, ping
 from location.models import Location
 from pysnmp import hlapi
+from django.utils import timezone
 
 
 COMMUNITY = 'public'
@@ -15,7 +16,7 @@ def update_parameter_status():
         # Ping First
         ping_result = ping.ping(loc.ipaddress)
         loc.ping_status = ping_result
-        print('PING', loc.ipaddress, ping_result)
+        print(timezone.now, 'PING', loc.ipaddress, ping_result)
         loc.save()
 
         if loc.device is not None and ping_result is True:
@@ -27,7 +28,7 @@ def update_parameter_status():
                 update_snmp_parameters(loc)
 
             if loc.device.connector == 'HTTP':
-                print('Check HTTP')
+                print(timezone.now, 'Check HTTP')
                 update_http_parameters(loc)
 
 
@@ -77,11 +78,12 @@ def update_http_parameters(loc):
     values = values_array(loc)
 
     for value in values:
-        print(value)
+        #print(value)
         loc.status_1 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_1
         loc.status_2 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_2
         loc.status_3 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_3
         loc.status_4 = 1 if (get_http_parameter(loc.ipaddress, value)) else loc.status_4
+        print(timezone.now, 'HTTP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
     loc.save()
 
@@ -94,11 +96,11 @@ def update_snmp_device_type(loc):
         result = None
 
     if result is None:
-        print('Remove Device', loc.device, 'from', loc.name)
+        print(timezone.now, 'Remove Device', loc.device, 'from', loc.name)
         loc.device = None
     else:
         loc.device_type = result[loc.device.parameter_type.value]
-        print('Get Result', loc.device_type, 'for', loc.name)
+        print(timezone.now, 'Get Result', loc.device_type, 'for', loc.name)
 
     loc.save()
 
@@ -118,6 +120,6 @@ def update_snmp_parameters(loc):
             loc.status_2 = result[loc.device.parameter_2.value] if loc.parameter_2 else loc.status_2
             loc.status_3 = result[loc.device.parameter_3.value] if loc.parameter_3 else loc.status_3
             loc.status_4 = result[loc.device.parameter_4.value] if loc.parameter_4 else loc.status_4
-            print('Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
+            print(timezone.now, 'SNMP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
             loc.save()

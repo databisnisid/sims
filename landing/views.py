@@ -15,7 +15,7 @@ def index(request):
     query = request.GET.get('q')
     region = None
     specific_region = None
-    print(query)
+    #print(query)
 
     if query is not None:
         try:
@@ -110,6 +110,7 @@ def frontend_view(request):
     # render function takes argument  - request
     # and return HTML as response
     return render(request, "frontend.html")
+
 
 class IndexView(ListView):
     model = Location
