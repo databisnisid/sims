@@ -60,7 +60,7 @@ def get(url):
 
     # Detect Image Black
     is_image_ok = False
-    if result:
+    if result and buffer.getbuffer().nbytes > 0
         is_image_ok = detect_black_image(buffer)
 
     buffer.close()
