@@ -122,32 +122,27 @@ function initMap() {
   const iconBase = "https://maps.google.com/mapfiles/ms/icons/";
   const icons = {
       'four': {
-        name: "Device With 4 Channels",
+        name: "DVR/NVR With 4 Cam",
         icon: iconBase + "green-dot.png",
         counter: 0,
       },
       'three': {
-        name: "Device With 3 Channels",
+        name: "DVR/NVR With 3 Cam",
         icon: iconBase + "blue-dot.png",
         counter: 0,
         },
       'two': {
-        name: "Device With 2 Channels",
-        icon: iconBase + "purple-dot.png",
-        counter: 0,
-        },
-      'one': {
-        name: "Device With 1 Channels",
+        name: "DVR/NVR With 2 Cam",
         icon: iconBase + "orange-dot.png",
         counter: 0,
       },
-      'ping': {
-        name: "Device PING Only",
+      'one': {
+        name: "DVR/NVR With 1 Cam",
         icon: iconBase + "yellow-dot.png",
         counter: 0,
         },
-      'nolive': {
-        name: "Device PROBLEM",
+      'zero': {
+        name: "DVR/NVR With 0 Cam",
         icon: iconBase + "red-dot.png",
         counter: 0,
       },
@@ -174,9 +169,9 @@ function initMap() {
     // If the Some Channel is problem
     if (locations[count][8] == 'True')
     {
-        iconMarker = icons['four'].icon;
-        pingStatus = 'OK';
-        deviceType = 'four';
+        //iconMarker = icons['four'].icon;
+        //pingStatus = 'OK';
+        //deviceType = 'four';
 
         let counter = 0;
 
@@ -186,20 +181,29 @@ function initMap() {
         if (locations[count][7] == 1) counter += 1;
 
         // If one of the channel is  0, then it is a problem
+        /*
         if ((locations[count][4] == '0' ) || (locations[count][5] == '0' )
             || (locations[count][6] == '0' ) || (locations[count][7] == '0' ))
             {
-                iconMarker = icons['nolive'].icon;
-                deviceType = 'nolive';
+                iconMarker = icons['zero'].icon;
+                deviceType = 'zero';
             }
+         */
 
         // If all channels are disable then, it is NO SNMP
+        /*
         if ((locations[count][4] == '-1' ) && (locations[count][5] == '-1' )
             && (locations[count][6] == '-1' ) && (locations[count][7] == '-1' ))
             {
-                iconMarker = icons['ping'].icon;
-                deviceType = 'ping';
+                iconMarker = icons['zero'].icon;
+                deviceType = 'zero';
             }
+         */
+
+        if (counter == 0 ) {
+            iconMarker = icons['zero'].icon;
+            deviceType = 'zero';
+        }
         if (counter == 1 ) {
             iconMarker = icons['one'].icon;
             deviceType = 'one';
@@ -219,9 +223,9 @@ function initMap() {
 
 
     } else {
-        iconMarker = icons['nolive'].icon;
+        iconMarker = icons['zero'].icon;
         pingStatus = 'NOT OK';
-        deviceType = 'nolive';
+        deviceType = 'zero';
     }
 
     let contentString =
