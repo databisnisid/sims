@@ -94,8 +94,8 @@ class LocationAdmin(admin.ModelAdmin):
     )
 
     list_display = ['name', 'address', 'geolocation',
-                    'ipaddress', 'device', 'device_type', 'ping_status',
-                    'status_one', 'status_two', 'status_three', 'status_four',
+                    'ipaddress', 'device', 'device_type',
+                    'camera_1', 'camera_2', 'camera_3', 'camera_4',
                     'region']
 
     #list_display_links = ['snapshot_1']
@@ -128,19 +128,19 @@ class LocationAdmin(admin.ModelAdmin):
     image_tag.short_description = 'Image'
 
     @staticmethod
-    def status_one(obj):
+    def camera_1(obj):
         return status_string(obj.status_1)
 
     @staticmethod
-    def status_two(obj):
+    def camera_2(obj):
         return status_string(obj.status_2)
 
     @staticmethod
-    def status_three(obj):
+    def camera_3(obj):
         return status_string(obj.status_3)
 
     @staticmethod
-    def status_four(obj):
+    def camera_4(obj):
         return status_string(obj.status_4)
 
 
