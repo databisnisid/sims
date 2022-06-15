@@ -94,7 +94,7 @@ class LocationAdmin(admin.ModelAdmin):
     )
 
     list_display = ['name', 'address', 'geolocation',
-                    'ipaddress', 'device', 'device_type',
+                    'ipaddress', 'device',
                     'camera_1', 'camera_2', 'camera_3', 'camera_4',
                     'region']
 
