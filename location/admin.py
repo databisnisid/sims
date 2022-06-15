@@ -117,7 +117,6 @@ class LocationAdmin(admin.ModelAdmin):
         else:
             self.list_display = ['name', 'address', 'geolocation',
                                  'ipaddress', 'device', 'device_type', 'ping_status',
-                                 'parameter_1', 'parameter_2', 'parameter_3', 'parameter_4',
                                  'camera_1', 'camera_2', 'camera_3', 'camera_4',
                                  'region']
 
