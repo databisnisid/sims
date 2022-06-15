@@ -94,7 +94,8 @@ class LocationAdmin(admin.ModelAdmin):
     )
 
     list_display = ['name', 'address', 'geolocation',
-                    'ipaddress', 'device',
+                    'ipaddress', 'device', 'device_type',
+                    'ping_status',
                     'camera_1', 'camera_2', 'camera_3', 'camera_4',
                     'region']
 
@@ -106,6 +107,21 @@ class LocationAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Location
+
+    def changelist_view(self, request, extra_context=None):
+        if not request.user.is_superuser:
+            self.list_display = ['name', 'address', 'geolocation',
+                                 'ipaddress', 'device',
+                                 'camera_1', 'camera_2', 'camera_3', 'camera_4',
+                                 'region']
+        else:
+            self.list_display = ['name', 'address', 'geolocation',
+                                 'ipaddress', 'device', 'device_type', 'ping_status',
+                                 'parameter_1', 'parameter_2', 'parameter_3', 'parameter_4',
+                                 'camera_1', 'camera_2', 'camera_3', 'camera_4',
+                                 'region']
+
+        return super(LocationAdmin, self).changelist_view(request, extra_context)
 
     def get_queryset(self, request):
         user = get_current_user()
