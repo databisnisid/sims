@@ -40,7 +40,7 @@ def detect_black_image(buffer):
     return is_image_ok
 
 
-def get(url):
+def get(url, channel=1):
     """ Check Channel and if picture snapshot is BLANK or not """
     buffer = io.BytesIO()
     c = pycurl.Curl()

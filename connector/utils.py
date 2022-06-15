@@ -39,7 +39,7 @@ def construct_http_url(ipaddress, parameter):
     return parameter.replace('__IPADDRESS__', ipaddress)
 
 
-def get_http_status(url):
+def get_http_status(url, channel=1):
     """ Get Status of Device """
     result, is_image_ok = http.get(url)
     status = False
@@ -50,9 +50,9 @@ def get_http_status(url):
     return status
 
 
-def get_http_parameter(ipaddress, parameter):
+def get_http_parameter(ipaddress, parameter, channel):
     """ Get Status per Parameter """
-    return get_http_status(construct_http_url(ipaddress, parameter))
+    return get_http_status(construct_http_url(ipaddress, parameter), channel)
 
 
 def values_array(loc):
@@ -78,7 +78,14 @@ def update_http_parameters(loc):
 
     print(values)
     for value in values:
-        status[value] = 1 if (get_http_parameter(loc.ipaddress, value)) is True else 0
+        # Try to get index of value
+        try:
+            channel = values.index(value)
+        except ValueError:
+            channel = -1
+        channel = channel + 1 if channel >= 0 else -1
+
+        status[value] = 1 if (get_http_parameter(loc.ipaddress, value, channel)) is True else 0
 
     loc.status_1 = status[loc.device.parameter_1.value]
     loc.status_2 = status[loc.device.parameter_2.value]
