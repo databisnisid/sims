@@ -175,10 +175,10 @@ function initMap() {
 
         let counter = 0;
 
-        if (locations[count][4] == 1) counter += 1;
-        if (locations[count][5] == 1) counter += 1;
-        if (locations[count][6] == 1) counter += 1;
-        if (locations[count][7] == 1) counter += 1;
+        if (parseInt(locations[count][4]) == 1) counter += 1;
+        if (parseInt(locations[count][5]) == 1) counter += 1;
+        if (parseInt(locations[count][6]) == 1) counter += 1;
+        if (parseInt(locations[count][7]) == 1) counter += 1;
 
         // If one of the channel is  0, then it is a problem
         /*
@@ -200,6 +200,7 @@ function initMap() {
             }
          */
 
+        console.log('Counter: ' + counter);
         if (counter == 0 ) {
             iconMarker = icons['zero'].icon;
             deviceType = 'zero';
