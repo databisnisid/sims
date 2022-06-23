@@ -37,6 +37,8 @@ def update_parameter_status_per_loc(loc):
         if loc.device.connector == 'HTTP':
             print('Check HTTP')
             update_http_parameters(loc)
+    else:
+        loc.status_1 = loc.status_2 = loc.status_3 = loc.status_4 = 0
 
 
 def construct_http_url(ipaddress, parameter):
