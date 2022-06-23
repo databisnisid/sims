@@ -91,7 +91,7 @@ def update_http_parameters(loc):
         except ValueError:
             channel = -1
         channel = channel + 1 if channel >= 0 else -1
-        print('Value_' + channel + ':' + value)
+        print('Value_' + str(channel) + ':' + value)
 
         status[value] = 1 if (get_http_parameter(loc.ipaddress, value, channel)) is True else 0
 
