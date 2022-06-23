@@ -83,15 +83,15 @@ def update_http_parameters(loc):
     values = values_array(loc)
     status = {}
 
-    print(values)
+    #print(values)
     for value in values:
-        print('Value: ' + value)
         # Try to get index of value
         try:
             channel = values.index(value)
         except ValueError:
             channel = -1
         channel = channel + 1 if channel >= 0 else -1
+        print('Value_' + channel + ':' + value)
 
         status[value] = 1 if (get_http_parameter(loc.ipaddress, value, channel)) is True else 0
 
