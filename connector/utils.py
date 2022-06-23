@@ -83,8 +83,9 @@ def update_http_parameters(loc):
     values = values_array(loc)
     status = {}
 
-    print('Values: ' + values)
+    print(values)
     for value in values:
+        print('Value: ' + value)
         # Try to get index of value
         try:
             channel = values.index(value)
