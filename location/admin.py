@@ -9,6 +9,7 @@ from crum import get_current_user
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
 from django.utils.html import format_html
+from connector.utils import update_parameter_status_per_loc
 
 
 class LocationForm(forms.ModelForm):
@@ -103,6 +104,7 @@ class LocationAdmin(admin.ModelAdmin):
 
     exclude = ['created_at', 'updated_at']
     readonly_fields = ['device_type']
+    actions = ['update_parameter_status']
     change_list_template = 'admin/change_list.html'
 
     class Meta:
@@ -136,6 +138,12 @@ class LocationAdmin(admin.ModelAdmin):
                 region = None
 
             return Location.objects.filter(region=region)
+
+    def update_parameter_status(self, request, queryset):
+        for obj in queryset:
+            update_parameter_status_per_loc(obj)
+
+    update_parameter_status.short_description = 'Check Parameter Status'
 
     def image_tag(self, obj):
         return format_html('<img src="lsajdla" />')

@@ -15,23 +15,28 @@ def update_parameter_status():
     location = Location.objects.all()
 
     for loc in location:
-        # Ping First
-        ping_result = ping.ping(loc.ipaddress, PING_PACKET, PING_TIMEOUT)
-        loc.ping_status = ping_result
-        print('PING', loc.ipaddress, ping_result)
-        loc.save()
+        update_parameter_status_per_loc(loc)
 
-        if loc.device is not None and ping_result is True:
-            # Get Product Type if Device Type is Blank
-            print(loc.device.connector)
-            if loc.device.connector == 'SNMP':
-                if loc.device.parameter_type is not None and not loc.device_type.strip():
-                    update_snmp_device_type(loc)
-                update_snmp_parameters(loc)
 
-            if loc.device.connector == 'HTTP':
-                print('Check HTTP')
-                update_http_parameters(loc)
+def update_parameter_status_per_loc(loc):
+    """ Update Parameter per location """
+    # Ping First
+    ping_result = ping.ping(loc.ipaddress, PING_PACKET, PING_TIMEOUT)
+    loc.ping_status = ping_result
+    print('PING', loc.ipaddress, ping_result)
+    loc.save()
+
+    if loc.device is not None and ping_result is True:
+        # Get Product Type if Device Type is Blank
+        print(loc.device.connector)
+        if loc.device.connector == 'SNMP':
+            if loc.device.parameter_type is not None and not loc.device_type.strip():
+                update_snmp_device_type(loc)
+            update_snmp_parameters(loc)
+
+        if loc.device.connector == 'HTTP':
+            print('Check HTTP')
+            update_http_parameters(loc)
 
 
 def construct_http_url(ipaddress, parameter):
