@@ -12,11 +12,18 @@ def get_ipaddress(value):
     return re.findall(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", value)
 
 
-def detect_black_image(buffer):
-    """ Detect Black Image. False if ALL BLACK. True if Images is NOT ALL BLACK """
+def buffer_to_image(buffer):
     buffer.seek(0)
     file_bytes = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    return image
+
+
+def detect_black_image(image):
+    """ Detect Black Image. False if ALL BLACK. True if Images is NOT ALL BLACK """
+    #buffer.seek(0)
+    #file_bytes = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
+    #image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
 
     # Crop Image from center to get sample area
     w = 200
@@ -61,7 +68,10 @@ def get(url, channel=1):
     # Detect Image Black
     is_image_ok = False
     if result and buffer.getbuffer().nbytes > 0:
-        is_image_ok = detect_black_image(buffer)
+        ipaddress = get_ipaddress(url)
+        image = buffer_to_image(buffer)
+        #is_image_ok = detect_black_image(buffer)
+        is_image_ok = detect_black_image(image)
 
     buffer.close()
 
