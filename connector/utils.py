@@ -83,7 +83,7 @@ def update_http_parameters(loc):
     values = values_array(loc)
     status = {}
 
-    print(values)
+    print('Values: ' + values)
     for value in values:
         # Try to get index of value
         try:
