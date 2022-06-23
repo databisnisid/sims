@@ -143,7 +143,7 @@ class LocationAdmin(admin.ModelAdmin):
         for obj in queryset:
             update_parameter_status_per_loc(obj)
 
-    update_parameter_status.short_description = 'Check Parameter Status'
+    update_parameter_status.short_description = 'Check Camera Status'
 
     def image_tag(self, obj):
         return format_html('<img src="lsajdla" />')
