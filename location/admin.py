@@ -105,7 +105,7 @@ class LocationAdmin(admin.ModelAdmin):
     exclude = ['created_at', 'updated_at']
     readonly_fields = ['device_type']
     actions = ['update_parameter_status']
-    #change_list_template = 'admin/change_list.html'
+    change_list_template = 'admin/change_list.html'
 
     class Meta:
         model = Location
