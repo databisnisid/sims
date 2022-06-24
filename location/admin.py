@@ -1,3 +1,4 @@
+import os
 from django.contrib import admin
 from .models import Location
 from account.models import Account
@@ -10,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib.auth.models import User
 from django.utils.html import format_html
 from connector.utils import update_parameter_status_per_loc
+from django.conf import settings
 
 
 class LocationForm(forms.ModelForm):
@@ -52,14 +54,27 @@ class LocationForm(forms.ModelForm):
                 raise ValidationError(_('No Region is assigned to User. Please assign region to user in Account'))
 
 
-def status_string(value):
+def status_string(value, channel, ipaddress):
     """ Convert integer value status to meaningful STRING """
+
     if value == 0:
-        return 'DOWN'
+        status = 'DOWN'
     elif value == 1:
-        return 'OK'
+        status = 'OK'
     else:
-        return 'DISABLE'
+        status = 'DISABLE'
+    user = get_current_user()
+    superuser = User.objects.get(username=user)
+    media_path = settings.MEDIA_ROOT + '/camera'
+    image_path = media_path + '/' + ipaddress + '_' + str(channel) + '.png'
+    if superuser.is_superuser and os.path.exists(image_path):
+        result = '<a href="' + settings.MEDIA_URL + '/camera/'
+        result += ipaddress + '_' + str(channel) + '.png" target="_blank">'
+        result += status
+        result += '</a>'
+        status = result
+
+    return status
 
 
 class LocationAdmin(admin.ModelAdmin):
@@ -152,19 +167,19 @@ class LocationAdmin(admin.ModelAdmin):
 
     @staticmethod
     def camera_1(obj):
-        return status_string(obj.status_1)
+        return status_string(obj.status_1, 1, obj.ipaddress)
 
     @staticmethod
     def camera_2(obj):
-        return status_string(obj.status_2)
+        return status_string(obj.status_2, 2, obj.ipaddress)
 
     @staticmethod
     def camera_3(obj):
-        return status_string(obj.status_3)
+        return status_string(obj.status_3, 3, obj.ipadress)
 
     @staticmethod
     def camera_4(obj):
-        return status_string(obj.status_4)
+        return status_string(obj.status_4, 4, obj.ipaddress)
 
 
 '''
