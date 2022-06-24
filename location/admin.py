@@ -169,22 +169,22 @@ class LocationAdmin(admin.ModelAdmin):
     @staticmethod
     def camera_1(obj):
         return status_string(obj.status_1, 1, obj.ipaddress)
-    camera_1.allow_tags = True
+    #camera_1.allow_tags = True
 
     @staticmethod
     def camera_2(obj):
         return status_string(obj.status_2, 2, obj.ipaddress)
-    camera_2.allow_tags = True
+    #camera_2.allow_tags = True
 
     @staticmethod
     def camera_3(obj):
         return status_string(obj.status_3, 3, obj.ipaddress)
-    camera_3.allow_tags = True
+    #camera_3.allow_tags = True
 
     @staticmethod
     def camera_4(obj):
         return status_string(obj.status_4, 4, obj.ipaddress)
-    camera_4.allow_tags = True
+    #camera_4.allow_tags = True
 
 
 '''
