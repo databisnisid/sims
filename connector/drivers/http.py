@@ -75,7 +75,7 @@ def get(url, channel=1):
         is_image_ok = detect_black_image(image)
         media_path = settings.MEDIA_ROOT + '/camera'
         pathlib.Path(media_path).mkdir(parents=True, exist_ok=True)
-        image_path = media_path + '/' + ipaddress[0] + '_' + channel + '.png'
+        image_path = media_path + '/' + ipaddress[0] + '_' + str(channel) + '.png'
         cv2.imwrite(image_path, image)
 
     buffer.close()
