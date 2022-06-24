@@ -68,14 +68,14 @@ def status_string(value, channel, ipaddress):
     media_path = settings.MEDIA_ROOT + '/camera'
     image_path = media_path + '/' + ipaddress + '_' + str(channel) + '.png'
     if superuser.is_superuser and os.path.exists(image_path):
-        pass
-        #result = '<a href="' + settings.MEDIA_URL + '/camera/'
-        #result += ipaddress + '_' + str(channel) + '.png" target="_blank">'
-        #result += status
-        #result += '</a>'
-        #status = result
+        #pass
+        result = '<a href="' + settings.MEDIA_URL + '/camera/'
+        result += ipaddress + '_' + str(channel) + '.png" target="_blank">'
+        result += status
+        result += '</a>'
+        status = result
 
-    return status
+    return format_html(status)
 
 
 class LocationAdmin(admin.ModelAdmin):
