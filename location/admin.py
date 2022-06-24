@@ -175,7 +175,7 @@ class LocationAdmin(admin.ModelAdmin):
 
     @staticmethod
     def camera_3(obj):
-        return status_string(obj.status_3, 3, obj.ipadress)
+        return status_string(obj.status_3, 3, obj.ipaddress)
 
     @staticmethod
     def camera_4(obj):
