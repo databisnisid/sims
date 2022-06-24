@@ -48,7 +48,7 @@ def construct_http_url(ipaddress, parameter):
 
 def get_http_status(url, channel=1):
     """ Get Status of Device """
-    result, is_image_ok = http.get(url)
+    result, is_image_ok = http.get(url, channel)
     status = False
     if result:
         if is_image_ok:
