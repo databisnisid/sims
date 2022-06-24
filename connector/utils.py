@@ -94,7 +94,7 @@ def update_http_parameters(loc):
         print('Value_' + str(channel) + ': ' + value)
 
         status[value] = 1 if (get_http_parameter(loc.ipaddress, value, channel)) is True else 0
-        print('Status_' + str(channel) + ': ' + status[value])
+        print('Status_' + str(channel) + ': ' + str(status[value]))
 
     loc.status_1 = status[loc.device.parameter_1.value]
     loc.status_2 = status[loc.device.parameter_2.value]
