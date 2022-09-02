@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'account',
     'location',
     'connector',
+    'notification',
     'django_crontab',
     'django_google_maps',
     'grappelli',
@@ -125,7 +126,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = 'static/'
 
 # Upload File
-MEDIA_URL = '/media'
+MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
@@ -155,3 +156,11 @@ DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
 #CRONJOBS = [
 #    ('*/5 * * * *', 'connector.utils.update_parameter_status()'),
 #]
+
+# Email
+EMAIL_BACKEND = str(os.getenv(('EMAIL_BACKEND')))
+EMAIL_HOST = str(os.getenv(('EMAIL_HOST')))
+EMAIL_PORT = os.getenv(('EMAIL_PORT'))
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = str(os.getenv(('EMAIL_HOST_USER')))
+EMAIL_HOST_PASSWORD = str(os.getenv(('EMAIL_HOST_PASSWORD')))

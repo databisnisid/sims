@@ -44,6 +44,11 @@ class Location(models.Model):
     status_3 = models.IntegerField(default=-1, verbose_name=_('Status 3'))
     status_4 = models.IntegerField(default=-1, verbose_name=_('Status 4'))
 
+    notification_1 = models.BooleanField(default=False, verbose_name=_('Notification Camera 1'))
+    notification_2 = models.BooleanField(default=False, verbose_name=_('Notification Camera 2'))
+    notification_3 = models.BooleanField(default=False, verbose_name=_('Notification Camera 3'))
+    notification_4 = models.BooleanField(default=False, verbose_name=_('Notification Camera 4'))
+
     ping_status = models.BooleanField(default=True, verbose_name=_('Ping Status'))
     device_type = models.CharField(max_length=30, blank=True, verbose_name=_('Device Type'))
 

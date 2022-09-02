@@ -36,7 +36,7 @@ class LocationForm(forms.ModelForm):
     def clean(self):
         #region = self.cleaned_data['region']
         #project = self.cleaned_data['project']
-        print(self.cleaned_data['region'])
+        #print(self.cleaned_data['region'])
         user = get_current_user()
         superuser = User.objects.get(username=user)
         #print(user)
@@ -52,6 +52,14 @@ class LocationForm(forms.ModelForm):
                 #    raise ValidationError({'region': _('Please assign region')})
             except ObjectDoesNotExist:
                 raise ValidationError(_('No Region is assigned to User. Please assign region to user in Account'))
+
+        else:
+            try:
+                self.cleaned_data['region']
+
+            except KeyError:
+                raise ValidationError(
+                    {'region': _('Please assign region!')})
 
 
 def status_string(value, channel, ipaddress):
@@ -106,6 +114,12 @@ class LocationAdmin(admin.ModelAdmin):
             'classes': ('grp-collapse grp-closed',),
             'fields': (
                 ('ipaddress', 'port'), 'device',
+            )
+        }),
+        (_('Email Notification'), {
+            'classes': ('grp-collapse grp-closed',),
+            'fields': (
+                ('notification_1', 'notification_2', 'notification_3', 'notification_4'),
             )
         }),
     )
