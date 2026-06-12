@@ -1,16 +1,16 @@
-from .drivers import snmp, http, ping
+from .drivers import snmp, http, ping, rtsp
 from location.models import Location
 from pysnmp import hlapi
 from django.utils import timezone
 
 
-COMMUNITY = 'public'
+COMMUNITY = "public"
 PING_PACKET = 1
 PING_TIMEOUT = 3
 
 
 def update_parameter_status():
-    """ Update all parameter status in location model using connector.utils """
+    """Update all parameter status in location model using connector.utils"""
 
     location = Location.objects.all()
 
@@ -19,35 +19,39 @@ def update_parameter_status():
 
 
 def update_parameter_status_per_loc(loc):
-    """ Update Parameter per location """
+    """Update Parameter per location"""
     # Ping First
     ping_result = ping.ping(loc.ipaddress, PING_PACKET, PING_TIMEOUT)
     loc.ping_status = ping_result
-    print('PING', loc.ipaddress, ping_result)
+    print("PING", loc.ipaddress, ping_result)
     loc.save()
 
     if loc.device is not None and ping_result is True:
         # Get Product Type if Device Type is Blank
         print(loc.device.connector)
-        if loc.device.connector == 'SNMP':
+        if loc.device.connector == "SNMP":
             if loc.device.parameter_type is not None and not loc.device_type.strip():
                 update_snmp_device_type(loc)
             update_snmp_parameters(loc)
 
-        if loc.device.connector == 'HTTP':
-            print('Check HTTP')
+        if loc.device.connector == "HTTP":
+            print("Check HTTP")
             update_http_parameters(loc)
+
+        if loc.device.connector == "RTSP":
+            print("Check RTSP")
+            update_rtsp_parameters(loc)
     else:
         loc.status_1 = loc.status_2 = loc.status_3 = loc.status_4 = 0
 
 
 def construct_http_url(ipaddress, parameter):
-    """ Construct URL """
-    return parameter.replace('__IPADDRESS__', ipaddress)
+    """Construct URL"""
+    return parameter.replace("__IPADDRESS__", ipaddress)
 
 
 def get_http_status(url, channel=1):
-    """ Get Status of Device """
+    """Get Status of Device"""
     result, is_image_ok = http.get(url, channel)
     status = False
     if result:
@@ -57,13 +61,29 @@ def get_http_status(url, channel=1):
     return status
 
 
+def get_rtsp_status(url, channel=1):
+    """Get Status of Device"""
+    result, is_image_ok = rtsp.get(url, channel)
+    status = False
+    if result:
+        if is_image_ok:
+            status = True
+
+    return status
+
+
 def get_http_parameter(ipaddress, parameter, channel):
-    """ Get Status per Parameter """
+    """Get Status per Parameter"""
     return get_http_status(construct_http_url(ipaddress, parameter), channel)
 
 
+def get_rtsp_parameter(ipaddress, parameter, channel):
+    """Get Status per Parameter"""
+    return get_rtsp_status(construct_http_url(ipaddress, parameter), channel)
+
+
 def values_array(loc):
-    """ Return Array list of Parameter value """
+    """Return Array list of Parameter value"""
     values = []
 
     if loc.device.parameter_1.value is not None:
@@ -79,11 +99,11 @@ def values_array(loc):
 
 
 def update_http_parameters(loc):
-    """ Get Parameter Status for HTTP Connector """
+    """Get Parameter Status for HTTP Connector"""
     values = values_array(loc)
     status = {}
 
-    #print(values)
+    # print(values)
     for value in values:
         # Try to get index of value
         try:
@@ -91,40 +111,74 @@ def update_http_parameters(loc):
         except ValueError:
             channel = -1
         channel = channel + 1 if channel >= 0 else -1
-        print('Value_' + str(channel) + ': ' + value)
+        print("Value_" + str(channel) + ": " + value)
 
-        status[value] = 1 if (get_http_parameter(loc.ipaddress, value, channel)) is True else 0
-        print('Status_' + str(channel) + ': ' + str(status[value]))
+        status[value] = (
+            1 if (get_http_parameter(loc.ipaddress, value, channel)) is True else 0
+        )
+        print("Status_" + str(channel) + ": " + str(status[value]))
 
     loc.status_1 = status[loc.device.parameter_1.value]
     loc.status_2 = status[loc.device.parameter_2.value]
     loc.status_3 = status[loc.device.parameter_3.value]
     loc.status_4 = status[loc.device.parameter_4.value]
 
-    print('HTTP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
+    print("HTTP Status", loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
     loc.save()
 
 
+def update_rtsp_parameters(loc):
+    """Get Parameter Status for RTSP Connector"""
+    values = values_array(loc)
+    status = {}
+
+    # print(values)
+    for value in values:
+        # Try to get index of value
+        try:
+            channel = values.index(value)
+        except ValueError:
+            channel = -1
+        channel = channel + 1 if channel >= 0 else -1
+        print("Value_" + str(channel) + ": " + value)
+
+        status[value] = (
+            1 if (get_rtsp_parameter(loc.ipaddress, value, channel)) is True else 0
+        )
+        print("Status_" + str(channel) + ": " + str(status[value]))
+
+    loc.status_1 = status[loc.device.parameter_1.value]
+    loc.status_2 = status[loc.device.parameter_2.value]
+    loc.status_3 = status[loc.device.parameter_3.value]
+    loc.status_4 = status[loc.device.parameter_4.value]
+
+    print("RTSP Status", loc.status_1, loc.status_2, loc.status_3, loc.status_4)
+
+
 def update_snmp_device_type(loc):
-    """ Get Product Type if Device Type is Blank """
+    """Get Product Type if Device Type is Blank"""
     try:
-        result = snmp.get(loc.ipaddress, [loc.device.parameter_type.value], hlapi.CommunityData(COMMUNITY))
+        result = snmp.get(
+            loc.ipaddress,
+            [loc.device.parameter_type.value],
+            hlapi.CommunityData(COMMUNITY),
+        )
     except RuntimeError:
         result = None
 
     if result is None:
-        print('Remove Device', loc.device, 'from', loc.name)
+        print("Remove Device", loc.device, "from", loc.name)
         loc.device = None
     else:
         loc.device_type = result[loc.device.parameter_type.value]
-        print('Get Result', loc.device_type, 'for', loc.name)
+        print("Get Result", loc.device_type, "for", loc.name)
 
     loc.save()
 
 
 def update_snmp_parameters(loc):
-    """ Get SNMP Status for each Parameter """
+    """Get SNMP Status for each Parameter"""
     values = values_array(loc)
 
     if values is not None:
@@ -134,10 +188,18 @@ def update_snmp_parameters(loc):
             result = None
 
         if result:
-            loc.status_1 = result[loc.device.parameter_1.value] if loc.parameter_1 is True else 0
-            loc.status_2 = result[loc.device.parameter_2.value] if loc.parameter_2 is True else 0
-            loc.status_3 = result[loc.device.parameter_3.value] if loc.parameter_3 is True else 0
-            loc.status_4 = result[loc.device.parameter_4.value] if loc.parameter_4 is True else 0
-            print('SNMP Status', loc.status_1, loc.status_2, loc.status_3, loc.status_4)
+            loc.status_1 = (
+                result[loc.device.parameter_1.value] if loc.parameter_1 is True else 0
+            )
+            loc.status_2 = (
+                result[loc.device.parameter_2.value] if loc.parameter_2 is True else 0
+            )
+            loc.status_3 = (
+                result[loc.device.parameter_3.value] if loc.parameter_3 is True else 0
+            )
+            loc.status_4 = (
+                result[loc.device.parameter_4.value] if loc.parameter_4 is True else 0
+            )
+            print("SNMP Status", loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
             loc.save()
