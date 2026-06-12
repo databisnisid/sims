@@ -137,6 +137,11 @@ def update_rtsp_parameters(loc):
     values = values_array(loc)
     status = {}
 
+    loc.status_1 = -1
+    loc.status_2 = -1
+    loc.status_3 = -1
+    loc.status_4 = -1
+
     # print(values)
     for value in values:
         # Try to get index of value
