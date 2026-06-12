@@ -155,6 +155,7 @@ def update_rtsp_parameters(loc):
 
     print("RTSP Status", loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
+    loc.save()
 
 def update_snmp_device_type(loc):
     """Get Product Type if Device Type is Blank"""
@@ -202,4 +203,4 @@ def update_snmp_parameters(loc):
             )
             print("SNMP Status", loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
-            loc.save()
+            loc.save(
