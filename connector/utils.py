@@ -152,10 +152,14 @@ def update_rtsp_parameters(loc):
         )
         print("Status_" + str(channel) + ": " + str(status[value]))
 
-    loc.status_1 = status[loc.device.parameter_1.value]
-    loc.status_2 = status[loc.device.parameter_2.value]
-    loc.status_3 = status[loc.device.parameter_3.value]
-    loc.status_4 = status[loc.device.parameter_4.value]
+    if loc.device.parameter_1 is not None:
+        loc.status_1 = status[loc.device.parameter_1.value]
+    if loc.device.parameter_2 is not None:
+        loc.status_2 = status[loc.device.parameter_2.value]
+    if loc.device.parameter_3 is not None:
+        loc.status_3 = status[loc.device.parameter_3.value]
+    if loc.device.parameter_4 is not None:
+        loc.status_4 = status[loc.device.parameter_4.value]
 
     print("RTSP Status", loc.status_1, loc.status_2, loc.status_3, loc.status_4)
 
