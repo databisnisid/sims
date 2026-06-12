@@ -86,14 +86,18 @@ def values_array(loc):
     """Return Array list of Parameter value"""
     values = []
 
-    if loc.device.parameter_1.value is not None:
-        values += [loc.device.parameter_1.value]
-    if loc.device.parameter_2.value is not None:
-        values += [loc.device.parameter_2.value]
-    if loc.device.parameter_3.value is not None:
-        values += [loc.device.parameter_3.value]
-    if loc.device.parameter_4.value is not None:
-        values += [loc.device.parameter_4.value]
+    if loc.device.parameter_1 is not None:
+        if loc.device.parameter_1.value is not None:
+            values += [loc.device.parameter_1.value]
+    if loc.device.parameter_2 is not None:
+        if loc.device.parameter_2.value is not None:
+            values += [loc.device.parameter_2.value]
+    if loc.device.parameter_3 is not None:
+        if loc.device.parameter_3.value is not None:
+            values += [loc.device.parameter_3.value]
+    if loc.device.parameter_4 is not None:
+        if loc.device.parameter_4.value is not None:
+            values += [loc.device.parameter_4.value]
 
     return values
 
